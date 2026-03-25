@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IoT Lab Manchester | Resolutis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700&family=Barlow+Condensed:wght@600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --white:    #ffffff;
+  --cream:    #f0ede8;
+  --cream2:   #e8e4de;
+  --dark:     #1a1a1a;
+  --dark2:    #2d2d2d;
+  --mid:      #555;
+  --light:    #888;
+  --purple:   #4a2d8a;
+  --purple2:  #5c38a8;
+  --accent:   #00c88a;
+  --nxp:      #f5a623;
+  --nvidia:   #76b900;
+  --border:   rgba(0,0,0,0.1);
+  --font-display: 'Barlow Condensed', sans-serif;
+  --font-body:    'Barlow', sans-serif;
+  --font-ui:      'Inter', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+body { font-family: var(--font-body); background: var(--white); color: var(--dark); overflow-x: hidden; }
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  height: 60px;
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 40px;
+}
+.logo {
+  font-family: var(--font-display);
+  font-weight: 900; font-size: 22px;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--dark); text-decoration: none;
+}
+.nav-links {
+  display: flex; align-items: center; gap: 36px; list-style: none;
+}
+.nav-links a {
+  font-family: var(--font-ui); font-size: 14px; font-weight: 500;
+  color: var(--dark); text-decoration: none; transition: color .15s;
+}
+.nav-links a:hover { color: var(--purple); }
+.nav-right { display: flex; align-items: center; gap: 16px; }
+.nav-li {
+  font-family: var(--font-ui); font-size: 12px; font-weight: 700;
+  color: var(--dark); text-decoration: none; letter-spacing: 0.04em;
+}
+.btn-pill {
+  display: inline-block; background: var(--purple); color: var(--white);
+  font-family: var(--font-ui); font-size: 13px; font-weight: 600;
+  padding: 9px 22px; border-radius: 100px; text-decoration: none;
+  transition: background .2s, transform .15s; border: none; cursor: pointer;
+}
+.btn-pill:hover { background: var(--purple2); transform: translateY(-1px); }
+.btn-pill-outline {
+  display: inline-block; background: transparent; color: var(--white);
+  font-family: var(--font-ui); font-size: 13px; font-weight: 600;
+  padding: 9px 22px; border-radius: 100px; text-decoration: none;
+  border: 1.5px solid rgba(255,255,255,0.5); transition: border-color .2s, transform .15s;
+}
+.btn-pill-outline:hover { border-color: var(--white); transform: translateY(-1px); }
+
+/* HERO */
+.hero {
+  position: relative; height: 100vh; min-height: 640px;
+  display: flex; align-items: flex-end; overflow: hidden;
+}
+.hero-bg {
+  position: absolute; inset: 0; z-index: 0;
+  background:
+    linear-gradient(to bottom, rgba(10,8,20,0.25) 0%, rgba(10,8,20,0.1) 35%, rgba(10,8,20,0.65) 75%, rgba(10,8,20,0.88) 100%),
+    linear-gradient(110deg, #0d0d1a 0%, #1a1030 35%, #0d1520 65%, #101818 100%);
+}
+.hero-texture {
+  position: absolute; inset: 0; z-index: 1; opacity: 0.05;
+  background-image:
+    linear-gradient(rgba(255,255,255,1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px);
+  background-size: 80px 80px;
+}
+.hero-glow {
+  position: absolute; z-index: 2;
+  width: 700px; height: 600px; top: 5%; right: 0%;
+  background: radial-gradient(ellipse, rgba(74,45,138,0.22) 0%, transparent 65%);
+  pointer-events: none;
+}
+.hero-glow2 {
+  position: absolute; z-index: 2;
+  width: 350px; height: 350px; bottom: 25%; left: 35%;
+  background: radial-gradient(ellipse, rgba(0,200,138,0.07) 0%, transparent 65%);
+  pointer-events: none;
+}
+.hero-traces {
+  position: absolute; inset: 0; z-index: 2; overflow: hidden; opacity: 0.12;
+}
+.hero-traces svg { width: 100%; height: 100%; }
+.hero-content {
+  position: relative; z-index: 10; width: 100%;
+  display: grid; grid-template-columns: 1fr 1fr;
+  align-items: flex-end; padding: 0 56px 72px; gap: 48px;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font-ui); font-size: 11px; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent);
+  margin-bottom: 20px;
+}
+.hero-badge-dot {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--accent);
+  animation: blink 2s ease-in-out infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+.hero h1 {
+  font-family: var(--font-display); font-size: clamp(56px, 8vw, 96px);
+  font-weight: 900; line-height: 0.93; letter-spacing: -0.01em;
+  color: var(--white); text-transform: uppercase;
+}
+.hero h1 em { font-style: italic; color: rgba(255,255,255,0.45); }
+.hero-right {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 18px;
+  padding-bottom: 8px;
+}
+.hero-chips { display: flex; gap: 10px; flex-wrap: wrap; }
+.hero-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 6px; padding: 5px 12px;
+  font-family: var(--font-ui); font-size: 11px; font-weight: 600;
+  letter-spacing: 0.04em; text-transform: uppercase;
+}
+.chip-nxp { color: var(--nxp); }
+.chip-nv  { color: var(--nvidia); }
+.hero-sub {
+  font-family: var(--font-body); font-size: 16px; font-weight: 400;
+  color: rgba(255,255,255,0.72); line-height: 1.7; max-width: 400px;
+}
+.hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+/* INTRO */
+.intro-band {
+  background: var(--cream); padding: 72px 56px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start;
+}
+.intro-band h2 {
+  font-family: var(--font-display); font-size: clamp(32px, 4vw, 52px);
+  font-weight: 800; line-height: 1.05; letter-spacing: -0.01em;
+  color: var(--dark); text-transform: uppercase;
+}
+.intro-band p {
+  font-size: 16px; color: var(--mid); line-height: 1.75; margin-bottom: 16px;
+}
+.intro-band p:last-child { margin-bottom: 0; }
+
+/* STATS */
+.stats-strip {
+  background: var(--dark); padding: 0 56px;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+}
+.stat-item {
+  padding: 40px 32px 40px 0;
+  border-right: 1px solid rgba(255,255,255,0.07);
+}
+.stat-item:first-child { padding-left: 0; }
+.stat-item:last-child { border-right: none; }
+.stat-num {
+  font-family: var(--font-display); font-size: 52px; font-weight: 900;
+  line-height: 1; color: var(--white); letter-spacing: -0.02em;
+}
+.stat-num span { color: var(--accent); }
+.stat-label {
+  font-family: var(--font-ui); font-size: 11px; font-weight: 500;
+  color: rgba(255,255,255,0.38); letter-spacing: 0.07em;
+  text-transform: uppercase; margin-top: 8px;
+}
+
+/* HARDWARE */
+.hw-section { background: var(--white); padding: 80px 56px; }
+.section-eyebrow {
+  font-family: var(--font-ui); font-size: 11px; font-weight: 700;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--light); margin-bottom: 12px;
+}
+.section-heading {
+  font-family: var(--font-display); font-size: clamp(30px, 4vw, 48px);
+  font-weight: 900; text-transform: uppercase; letter-spacing: -0.01em;
+  line-height: 1.0; color: var(--dark); margin-bottom: 12px;
+}
+.section-intro {
+  font-size: 16px; color: var(--mid); line-height: 1.7;
+  max-width: 520px; margin-bottom: 52px;
+}
+.hw-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1px; background: var(--border); border: 1px solid var(--border);
+}
+.hw-card {
+  background: var(--white); padding: 36px 32px;
+  transition: background .2s;
+}
+.hw-card:hover { background: var(--cream); }
+.hw-vendor-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font-ui); font-size: 10px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 18px;
+}
+.hw-vendor-bar { width: 24px; height: 3px; border-radius: 2px; }
+.hw-card.nxp .hw-vendor-tag { color: #a06800; }
+.hw-card.nxp .hw-vendor-bar { background: var(--nxp); }
+.hw-card.nvidia .hw-vendor-tag { color: #3d6500; }
+.hw-card.nvidia .hw-vendor-bar { background: var(--nvidia); }
+.hw-card.lab .hw-vendor-tag { color: #006845; }
+.hw-card.lab .hw-vendor-bar { background: var(--accent); }
+.hw-title {
+  font-family: var(--font-display); font-size: 20px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 0.01em;
+  color: var(--dark); margin-bottom: 10px; line-height: 1.15;
+}
+.hw-desc { font-size: 14px; color: var(--mid); line-height: 1.65; }
+.hw-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 18px; }
+.hw-tag {
+  font-family: var(--font-ui); font-size: 10px; font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  background: var(--cream); color: var(--mid);
+  border-radius: 4px; padding: 4px 9px;
+}
+
+/* SERVICES */
+.services-section { background: var(--cream); padding: 80px 56px; }
+.services-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 2px; background: var(--cream2);
+  border: 1px solid var(--cream2); margin-top: 52px;
+}
+.svc-card {
+  background: var(--cream); padding: 40px 36px; transition: background .2s;
+}
+.svc-card:hover { background: var(--white); }
+.svc-num {
+  font-family: var(--font-display); font-size: 13px; font-weight: 800;
+  letter-spacing: 0.1em; color: var(--light); margin-bottom: 16px;
+}
+.svc-title {
+  font-family: var(--font-display); font-size: 22px; font-weight: 900;
+  text-transform: uppercase; letter-spacing: 0.01em;
+  color: var(--dark); line-height: 1.1; margin-bottom: 12px;
+}
+.svc-desc { font-size: 14px; color: var(--mid); line-height: 1.7; margin-bottom: 20px; }
+.svc-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.svc-list li {
+  font-size: 13px; color: var(--mid);
+  display: flex; align-items: flex-start; gap: 10px; line-height: 1.5;
+}
+.svc-list li::before { content: '—'; color: var(--light); flex-shrink: 0; }
+
+/* PARTNERS */
+.partner-section {
+  background: var(--dark); padding: 80px 56px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+}
+.partner-section h2 {
+  font-family: var(--font-display); font-size: clamp(32px, 4vw, 52px);
+  font-weight: 900; text-transform: uppercase;
+  color: var(--white); line-height: 1.0; margin-bottom: 20px;
+}
+.partner-section p {
+  font-size: 16px; color: rgba(255,255,255,0.52); line-height: 1.75;
+}
+.partner-cards { display: flex; flex-direction: column; gap: 16px; }
+.partner-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px; padding: 24px 28px;
+  display: flex; align-items: center; gap: 20px;
+}
+.partner-logo-block {
+  width: 48px; height: 48px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-size: 13px; font-weight: 900;
+  flex-shrink: 0; letter-spacing: 0.04em;
+}
+.plogo-nxp  { background: var(--nxp);    color: #0b0e13; }
+.plogo-nvidia { background: var(--nvidia); color: #0b0e13; }
+.partner-card-name {
+  font-family: var(--font-ui); font-size: 13px; font-weight: 700;
+  color: var(--white); margin-bottom: 4px;
+}
+.partner-card-desc { font-size: 13px; color: rgba(255,255,255,0.38); line-height: 1.5; }
+
+/* CTA */
+.cta-section {
+  background: var(--purple); padding: 96px 56px;
+  text-align: center; position: relative; overflow: hidden;
+}
+.cta-section::before {
+  content: ''; position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+.cta-section h2 {
+  font-family: var(--font-display); font-size: clamp(36px, 5vw, 64px);
+  font-weight: 900; text-transform: uppercase;
+  color: var(--white); line-height: 1.0; margin-bottom: 20px;
+  position: relative; z-index: 1;
+}
+.cta-section p {
+  font-size: 17px; color: rgba(255,255,255,0.68);
+  line-height: 1.7; max-width: 520px; margin: 0 auto 40px;
+  position: relative; z-index: 1;
+}
+.cta-actions {
+  display: flex; gap: 14px; justify-content: center;
+  flex-wrap: wrap; position: relative; z-index: 1;
+}
+.btn-white {
+  display: inline-block; background: var(--white); color: var(--purple);
+  font-family: var(--font-ui); font-size: 14px; font-weight: 700;
+  padding: 13px 28px; border-radius: 100px; text-decoration: none;
+  transition: opacity .2s, transform .15s;
+}
+.btn-white:hover { opacity: 0.9; transform: translateY(-1px); }
+
+/* FOOTER */
+footer {
+  background: var(--white); border-top: 1px solid var(--border);
+  padding: 32px 56px; display: flex; align-items: center;
+  justify-content: space-between; flex-wrap: wrap; gap: 16px;
+}
+.footer-logo {
+  font-family: var(--font-display); font-size: 18px; font-weight: 900;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--dark); text-decoration: none;
+}
+.footer-links { display: flex; gap: 28px; }
+.footer-links a {
+  font-family: var(--font-ui); font-size: 13px; font-weight: 500;
+  color: var(--mid); text-decoration: none; transition: color .15s;
+}
+.footer-links a:hover { color: var(--dark); }
+.footer-right { font-family: var(--font-ui); font-size: 12px; color: var(--light); }
+
+@media (max-width: 900px) {
+  nav { padding: 0 20px; }
+  .nav-links { display: none; }
+  .hero-content { grid-template-columns: 1fr; padding: 0 24px 56px; gap: 28px; }
+  .intro-band { grid-template-columns: 1fr; padding: 56px 24px; gap: 32px; }
+  .stats-strip { grid-template-columns: repeat(2,1fr); padding: 0 24px; }
+  .stat-item { padding: 32px 16px 32px 0; }
+  .hw-section, .services-section { padding: 56px 24px; }
+  .partner-section { grid-template-columns: 1fr; gap: 40px; padding: 56px 24px; }
+  .cta-section { padding: 72px 24px; }
+  .hw-grid { grid-template-columns: 1fr; }
+  .services-grid { grid-template-columns: 1fr; }
+  footer { padding: 28px 24px; flex-direction: column; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="https://resolutis.com" class="logo">R≡SOLUTIS</a>
+  <ul class="nav-links">
+    <li><a href="https://resolutis.com/about/">About</a></li>
+    <li><a href="https://resolutis.com/services/">Services</a></li>
+    <li><a href="https://resolutis.com/blog/">Blog</a></li>
+    <li><a href="https://resolutis.com/contact/">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="https://www.linkedin.com/company/resolutis-com/" class="nav-li">in</a>
+    <a href="https://calendly.com/john-resolutis/30-minute-consultation" class="btn-pill">Book a call</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-texture"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-traces">
+    <svg viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <g stroke="white" stroke-width="1" fill="none">
+        <path d="M820 0 L820 220 L1120 220 L1120 420 L1320 420"/>
+        <path d="M920 0 L920 160 L1220 160 L1220 360 L1440 360"/>
+        <path d="M1060 0 L1060 100 L1360 100"/>
+        <path d="M1440 260 L1300 260 L1300 460 L1060 460 L1060 620"/>
+        <circle cx="820" cy="220" r="5" fill="white" opacity="0.8"/>
+        <circle cx="1120" cy="220" r="5" fill="white" opacity="0.8"/>
+        <circle cx="1120" cy="420" r="5" fill="white" opacity="0.8"/>
+        <circle cx="920" cy="160" r="5" fill="white" opacity="0.8"/>
+        <circle cx="1220" cy="160" r="5" fill="white" opacity="0.8"/>
+        <circle cx="1300" cy="260" r="5" fill="white" opacity="0.8"/>
+        <circle cx="1060" cy="460" r="5" fill="white" opacity="0.8"/>
+        <rect x="1290" y="400" width="44" height="44" rx="4"/>
+        <rect x="1070" y="195" width="88" height="42" rx="4"/>
+        <path d="M200 800 L200 580 L500 580 L500 380 L700 380"/>
+        <path d="M350 800 L350 650 L600 650"/>
+        <circle cx="200" cy="580" r="4" fill="white" opacity="0.6"/>
+        <circle cx="500" cy="580" r="4" fill="white" opacity="0.6"/>
+        <circle cx="500" cy="380" r="4" fill="white" opacity="0.6"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-left">
+      <div class="hero-badge">
+        <div class="hero-badge-dot"></div>
+        Manchester · Now open
+      </div>
+      <h1>IoT &amp;<br>Edge AI<br><em>Lab</em></h1>
+    </div>
+    <div class="hero-right">
+      <div class="hero-chips">
+        <span class="hero-chip chip-nxp">NXP CTO Office</span>
+        <span class="hero-chip chip-nv">NVIDIA Connect Partner</span>
+      </div>
+      <p class="hero-sub">
+        Manchester's hands-on space for embedded systems and edge AI. NXP i.MX 9x, i.MX 93W, NTAG 424 DNA and NVIDIA Jetson Orin. Real silicon, real deployments.
+      </p>
+      <div class="hero-actions">
+        <a href="https://calendly.com/john-resolutis/30-minute-consultation" class="btn-pill">Begin Now</a>
+        <a href="#hardware" class="btn-pill-outline">Explore the lab</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="intro-band">
+  <div>
+    <h2>Strategic technology leadership<br>without the full-time cost.</h2>
+  </div>
+  <div>
+    <p>Most IoT and edge AI projects stall at the same point. The hardware works. The proof of concept runs. But turning that into something production-ready — secure, observable, integrated with the rest of the business — is where things get complicated.</p>
+    <p>Resolutis IoT Lab exists for that gap. Operated by engineers who've shipped at Apple, Google, JLR and NXP. NVIDIA Connect Partner. Close relationship with NXP's CTO office. The North of England's only dedicated embedded and edge AI lab.</p>
+  </div>
+</section>
+
+<div class="stats-strip">
+  <div class="stat-item">
+    <div class="stat-num">25<span>+</span></div>
+    <div class="stat-label">Years embedded</div>
+  </div>
+  <div class="stat-item" style="padding-left:32px">
+    <div class="stat-num">£18<span>M</span></div>
+    <div class="stat-label">Revenue delivered</div>
+  </div>
+  <div class="stat-item" style="padding-left:32px">
+    <div class="stat-num">4</div>
+    <div class="stat-label">Big tech partners</div>
+  </div>
+  <div class="stat-item" style="padding-left:32px">
+    <div class="stat-num" style="font-size:40px;letter-spacing:0.02em">MCR</div>
+    <div class="stat-label">North England IoT Lab</div>
+  </div>
+</div>
+
+<section class="hw-section" id="hardware">
+  <div class="section-eyebrow">Lab hardware</div>
+  <h2 class="section-heading">Silicon you<br>can build on</h2>
+  <p class="section-intro">Direct access to the latest NXP and NVIDIA silicon — the same platforms powering next-generation edge AI and IoT products.</p>
+  <div class="hw-grid">
+    <div class="hw-card nxp">
+      <div class="hw-vendor-tag"><div class="hw-vendor-bar"></div>NXP</div>
+      <div class="hw-title">i.MX 93W Application Processor</div>
+      <div class="hw-desc">Latest-gen i.MX 9 series with eIQ ML acceleration, integrated wireless, and EdgeLock security. Purpose-built for edge AI inference in constrained environments.</div>
+      <div class="hw-tags">
+        <span class="hw-tag">eIQ</span><span class="hw-tag">EdgeLock</span><span class="hw-tag">Wireless</span><span class="hw-tag">Linux</span>
+      </div>
+    </div>
+    <div class="hw-card nxp">
+      <div class="hw-vendor-tag"><div class="hw-vendor-bar"></div>NXP</div>
+      <div class="hw-title">i.MX 9x Series EVKs</div>
+      <div class="hw-desc">Full i.MX 9 family evaluation kits. Embedded Linux, Zephyr RTOS, Rust firmware, full BSPs — plus direct NXP engineering access through our CTO office relationship.</div>
+      <div class="hw-tags">
+        <span class="hw-tag">i.MX 93</span><span class="hw-tag">i.MX 95</span><span class="hw-tag">Rust</span><span class="hw-tag">Yocto</span>
+      </div>
+    </div>
+    <div class="hw-card nxp">
+      <div class="hw-vendor-tag"><div class="hw-vendor-bar"></div>NXP</div>
+      <div class="hw-title">NTAG 424 DNA</div>
+      <div class="hw-desc">Secure NFC authentication silicon with NIST SP 800-108 key diversification. In active production on DeLux — a whisky NFC authentication platform built by Resolutis.</div>
+      <div class="hw-tags">
+        <span class="hw-tag">NFC</span><span class="hw-tag">SUN/SDM</span><span class="hw-tag">AES-128</span><span class="hw-tag">NDEF</span>
+      </div>
+    </div>
+    <div class="hw-card nvidia">
+      <div class="hw-vendor-tag"><div class="hw-vendor-bar"></div>NVIDIA</div>
+      <div class="hw-title">Jetson Orin NX / AGX</div>
+      <div class="hw-desc">NVIDIA's most capable edge AI platform. 1024-core Ampere GPU, up to 275 TOPS. TensorRT, DeepStream, ROS 2. Production-grade inference at the edge.</div>
+      <div class="hw-tags">
+        <span class="hw-tag">TensorRT</span><span class="hw-tag">CUDA</span><span class="hw-tag">DeepStream</span><span class="hw-tag">ROS 2</span>
+      </div>
+    </div>
+    <div class="hw-card nvidia">
+      <div class="hw-vendor-tag"><div class="hw-vendor-bar"></div>NVIDIA</div>
+      <div class="hw-title">eIQ Agentic AI Framework</div>
+      <div class="hw-desc">NXP's eIQ agentic AI stack running on NVIDIA-class hardware. Bridging MCU and MPU boundaries for real multi-vendor edge AI deployments.</div>
+      <div class="hw-tags">
+        <span class="hw-tag">eIQ</span><span class="hw-tag">Agentic AI</span><span class="hw-tag">MCU+MPU</span>
+      </div>
+    </div>
+    <div class="hw-card lab">
+      <div class="hw-vendor-tag"><div class="hw-vendor-bar"></div>Lab infrastructure</div>
+      <div class="hw-title">Edge-to-Cloud Stack</div>
+      <div class="hw-desc">LTE-M / NB-IoT via Actility ThingPark, PN532 NFC provisioning rigs, Kafka / Redpanda pipelines, and Conduo — Resolutis's own Rust-based integration platform.</div>
+      <div class="hw-tags">
+        <span class="hw-tag">LTE-M</span><span class="hw-tag">Kafka</span><span class="hw-tag">Conduo</span><span class="hw-tag">AWS</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="services-section" id="services">
+  <div class="section-eyebrow">What we do</div>
+  <h2 class="section-heading">From silicon<br>to production</h2>
+  <p class="section-intro">Fractional CTO and hands-on engineering for companies building on NXP and NVIDIA hardware.</p>
+  <div class="services-grid">
+    <div class="svc-card">
+      <div class="svc-num">01</div>
+      <div class="svc-title">NXP Silicon Integration</div>
+      <div class="svc-desc">Deep i.MX 9x and NTAG 424 DNA expertise, with direct NXP CTO office access that shortens your development cycle.</div>
+      <ul class="svc-list">
+        <li>Embedded Linux &amp; Yocto build systems</li>
+        <li>Rust firmware for constrained targets</li>
+        <li>NFC / SUN / SDM authentication systems</li>
+        <li>Key diversification &amp; EdgeLock security</li>
+      </ul>
+    </div>
+    <div class="svc-card">
+      <div class="svc-num">02</div>
+      <div class="svc-title">Edge AI &amp; NVIDIA Jetson</div>
+      <div class="svc-desc">NVIDIA Connect Partner. TensorRT model optimisation, inference pipelines, and EdgeOps observability — the part that usually gets skipped.</div>
+      <ul class="svc-list">
+        <li>TensorRT / ONNX model deployment</li>
+        <li>Edge inference observability (EdgeOps)</li>
+        <li>Multi-modal sensor fusion pipelines</li>
+        <li>Jetson Orin NX / AGX bring-up</li>
+      </ul>
+    </div>
+    <div class="svc-card">
+      <div class="svc-num">03</div>
+      <div class="svc-title">Fractional CTO Leadership</div>
+      <div class="svc-desc">Senior embedded and edge AI leadership without a full-time hire. Strategy, architecture, team building — from £1,020/day.</div>
+      <ul class="svc-list">
+        <li>Technical roadmap &amp; architecture</li>
+        <li>Due diligence &amp; pre-investment review</li>
+        <li>Team hiring and structure</li>
+        <li>Board-level technical reporting</li>
+      </ul>
+    </div>
+    <div class="svc-card">
+      <div class="svc-num">04</div>
+      <div class="svc-title">IoT Data Pipelines</div>
+      <div class="svc-desc">Edge-to-cloud data architecture using Conduo — Resolutis's own Rust-based integration platform for IoT data ingestion and ERP connectors.</div>
+      <ul class="svc-list">
+        <li>Conduo integration platform (Rust)</li>
+        <li>Kafka / Redpanda event streaming</li>
+        <li>LTE-M / NB-IoT connectivity</li>
+        <li>SAP, ERP, and cloud connectors</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="partner-section">
+  <div>
+    <h2>Trusted by the people who make the silicon.</h2>
+    <p>Working closely with NXP's CTO office and as an NVIDIA Connect Partner, Resolutis has the relationships that matter when you're building on serious hardware. Not a reseller. Not a distributor. An engineering partner with direct access and roadmap visibility.</p>
+  </div>
+  <div class="partner-cards">
+    <div class="partner-card">
+      <div class="partner-logo-block plogo-nxp">NXP</div>
+      <div>
+        <div class="partner-card-name">NXP CTO Office relationship</div>
+        <div class="partner-card-desc">Direct engineering access. Roadmap visibility. i.MX 9x, NTAG 424 DNA, eIQ Framework.</div>
+      </div>
+    </div>
+    <div class="partner-card">
+      <div class="partner-logo-block plogo-nvidia">NV</div>
+      <div>
+        <div class="partner-card-name">NVIDIA Connect Partner</div>
+        <div class="partner-card-desc">Jetson Orin, TensorRT, DeepStream. NVIDIA-certified edge AI engineering.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <h2>Building on NXP or<br>NVIDIA silicon?</h2>
+  <p>If your project is stalled, scoped wrong, or needs someone who's shipped this hardware before — let's talk. Direct NXP and NVIDIA access included.</p>
+  <div class="cta-actions">
+    <a href="https://calendly.com/john-resolutis/30-minute-consultation" class="btn-white">Book a 30-min call</a>
+    <a href="https://resolutis.com/contact/" class="btn-pill-outline">Send a message</a>
+  </div>
+</section>
+
+<footer>
+  <a href="https://resolutis.com" class="footer-logo">R≡SOLUTIS · IoT Lab</a>
+  <div class="footer-links">
+    <a href="https://resolutis.com/about/">About</a>
+    <a href="https://resolutis.com/services/">Services</a>
+    <a href="https://resolutis.com/blog/">Blog</a>
+    <a href="https://resolutis.com/contact/">Contact</a>
+    <a href="https://www.linkedin.com/company/resolutis-com/">LinkedIn</a>
+  </div>
+  <div class="footer-right">iotlab.resolutis.com</div>
+</footer>
+
+</body>
+</html>

@@ -3,625 +3,997 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IoT Lab Manchester | Resolutis</title>
+<title>Manchester IoT Lab — Resolutis</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700&family=Barlow+Condensed:wght@600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:        #07090d;
+    --bg2:       #0c0f15;
+    --bg3:       #111520;
+    --white:     #eef0f4;
+    --muted:     #5a6478;
+    --border:    rgba(255,255,255,0.07);
+    --border2:   rgba(255,255,255,0.04);
+    --orange:    #ff6b2b;
+    --orange2:   #e85a1f;
+    --orange-dim:rgba(255,107,43,0.08);
+    --font-disp: "Syne", sans-serif;
+    --font-mono: "DM Mono", monospace;
+    --font-body: "DM Sans", sans-serif;
+  }
 
-:root {
-  --white:    #ffffff;
-  --cream:    #f0ede8;
-  --cream2:   #e8e4de;
-  --dark:     #1a1a1a;
-  --dark2:    #2d2d2d;
-  --mid:      #555;
-  --light:    #888;
-  --purple:   #4a2d8a;
-  --purple2:  #5c38a8;
-  --accent:   #00c88a;
-  --nxp:      #f5a623;
-  --nvidia:   #76b900;
-  --border:   rgba(0,0,0,0.1);
-  --font-display: 'Barlow Condensed', sans-serif;
-  --font-body:    'Barlow', sans-serif;
-  --font-ui:      'Inter', sans-serif;
-}
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
 
-html { scroll-behavior: smooth; }
-body { font-family: var(--font-body); background: var(--white); color: var(--dark); overflow-x: hidden; }
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--white);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
 
-/* NAV */
-nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-  height: 60px;
-  background: var(--white);
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 40px;
-}
-.logo {
-  font-family: var(--font-display);
-  font-weight: 900; font-size: 22px;
-  letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--dark); text-decoration: none;
-}
-.nav-links {
-  display: flex; align-items: center; gap: 36px; list-style: none;
-}
-.nav-links a {
-  font-family: var(--font-ui); font-size: 14px; font-weight: 500;
-  color: var(--dark); text-decoration: none; transition: color .15s;
-}
-.nav-links a:hover { color: var(--purple); }
-.nav-right { display: flex; align-items: center; gap: 16px; }
-.nav-li {
-  font-family: var(--font-ui); font-size: 12px; font-weight: 700;
-  color: var(--dark); text-decoration: none; letter-spacing: 0.04em;
-}
-.btn-pill {
-  display: inline-block; background: var(--purple); color: var(--white);
-  font-family: var(--font-ui); font-size: 13px; font-weight: 600;
-  padding: 9px 22px; border-radius: 100px; text-decoration: none;
-  transition: background .2s, transform .15s; border: none; cursor: pointer;
-}
-.btn-pill:hover { background: var(--purple2); transform: translateY(-1px); }
-.btn-pill-outline {
-  display: inline-block; background: transparent; color: var(--white);
-  font-family: var(--font-ui); font-size: 13px; font-weight: 600;
-  padding: 9px 22px; border-radius: 100px; text-decoration: none;
-  border: 1.5px solid rgba(255,255,255,0.5); transition: border-color .2s, transform .15s;
-}
-.btn-pill-outline:hover { border-color: var(--white); transform: translateY(-1px); }
+  /* noise texture */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
 
-/* HERO */
-.hero {
-  position: relative; height: 100vh; min-height: 640px;
-  display: flex; align-items: flex-end; overflow: hidden;
-}
-.hero-bg {
-  position: absolute; inset: 0; z-index: 0;
-  background:
-    linear-gradient(to bottom, rgba(10,8,20,0.25) 0%, rgba(10,8,20,0.1) 35%, rgba(10,8,20,0.65) 75%, rgba(10,8,20,0.88) 100%),
-    linear-gradient(110deg, #0d0d1a 0%, #1a1030 35%, #0d1520 65%, #101818 100%);
-}
-.hero-texture {
-  position: absolute; inset: 0; z-index: 1; opacity: 0.05;
-  background-image:
-    linear-gradient(rgba(255,255,255,1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px);
-  background-size: 80px 80px;
-}
-.hero-glow {
-  position: absolute; z-index: 2;
-  width: 700px; height: 600px; top: 5%; right: 0%;
-  background: radial-gradient(ellipse, rgba(74,45,138,0.22) 0%, transparent 65%);
-  pointer-events: none;
-}
-.hero-glow2 {
-  position: absolute; z-index: 2;
-  width: 350px; height: 350px; bottom: 25%; left: 35%;
-  background: radial-gradient(ellipse, rgba(0,200,138,0.07) 0%, transparent 65%);
-  pointer-events: none;
-}
-.hero-traces {
-  position: absolute; inset: 0; z-index: 2; overflow: hidden; opacity: 0.12;
-}
-.hero-traces svg { width: 100%; height: 100%; }
-.hero-content {
-  position: relative; z-index: 10; width: 100%;
-  display: grid; grid-template-columns: 1fr 1fr;
-  align-items: flex-end; padding: 0 56px 72px; gap: 48px;
-}
-.hero-badge {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-family: var(--font-ui); font-size: 11px; font-weight: 600;
-  letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent);
-  margin-bottom: 20px;
-}
-.hero-badge-dot {
-  width: 7px; height: 7px; border-radius: 50%; background: var(--accent);
-  animation: blink 2s ease-in-out infinite;
-}
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
-.hero h1 {
-  font-family: var(--font-display); font-size: clamp(56px, 8vw, 96px);
-  font-weight: 900; line-height: 0.93; letter-spacing: -0.01em;
-  color: var(--white); text-transform: uppercase;
-}
-.hero h1 em { font-style: italic; color: rgba(255,255,255,0.45); }
-.hero-right {
-  display: flex; flex-direction: column; align-items: flex-start; gap: 18px;
-  padding-bottom: 8px;
-}
-.hero-chips { display: flex; gap: 10px; flex-wrap: wrap; }
-.hero-chip {
-  display: inline-flex; align-items: center; gap: 6px;
-  background: rgba(255,255,255,0.07);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 6px; padding: 5px 12px;
-  font-family: var(--font-ui); font-size: 11px; font-weight: 600;
-  letter-spacing: 0.04em; text-transform: uppercase;
-}
-.chip-nxp { color: var(--nxp); }
-.chip-nv  { color: var(--nvidia); }
-.hero-sub {
-  font-family: var(--font-body); font-size: 16px; font-weight: 400;
-  color: rgba(255,255,255,0.72); line-height: 1.7; max-width: 400px;
-}
-.hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 48px;
+    background: rgba(7,9,13,0.9);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
 
-/* INTRO */
-.intro-band {
-  background: var(--cream); padding: 72px 56px;
-  display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start;
-}
-.intro-band h2 {
-  font-family: var(--font-display); font-size: clamp(32px, 4vw, 52px);
-  font-weight: 800; line-height: 1.05; letter-spacing: -0.01em;
-  color: var(--dark); text-transform: uppercase;
-}
-.intro-band p {
-  font-size: 16px; color: var(--mid); line-height: 1.75; margin-bottom: 16px;
-}
-.intro-band p:last-child { margin-bottom: 0; }
+  .nav-logo { display: flex; align-items: center; gap: 14px; text-decoration: none; }
 
-/* STATS */
-.stats-strip {
-  background: var(--dark); padding: 0 56px;
-  display: grid; grid-template-columns: repeat(4, 1fr);
-}
-.stat-item {
-  padding: 40px 32px 40px 0;
-  border-right: 1px solid rgba(255,255,255,0.07);
-}
-.stat-item:first-child { padding-left: 0; }
-.stat-item:last-child { border-right: none; }
-.stat-num {
-  font-family: var(--font-display); font-size: 52px; font-weight: 900;
-  line-height: 1; color: var(--white); letter-spacing: -0.02em;
-}
-.stat-num span { color: var(--accent); }
-.stat-label {
-  font-family: var(--font-ui); font-size: 11px; font-weight: 500;
-  color: rgba(255,255,255,0.38); letter-spacing: 0.07em;
-  text-transform: uppercase; margin-top: 8px;
-}
+  .nav-logo img { height: 20px; width: auto; display: block; }
 
-/* HARDWARE */
-.hw-section { background: var(--white); padding: 80px 56px; }
-.section-eyebrow {
-  font-family: var(--font-ui); font-size: 11px; font-weight: 700;
-  letter-spacing: 0.14em; text-transform: uppercase; color: var(--light); margin-bottom: 12px;
-}
-.section-heading {
-  font-family: var(--font-display); font-size: clamp(30px, 4vw, 48px);
-  font-weight: 900; text-transform: uppercase; letter-spacing: -0.01em;
-  line-height: 1.0; color: var(--dark); margin-bottom: 12px;
-}
-.section-intro {
-  font-size: 16px; color: var(--mid); line-height: 1.7;
-  max-width: 520px; margin-bottom: 52px;
-}
-.hw-grid {
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 1px; background: var(--border); border: 1px solid var(--border);
-}
-.hw-card {
-  background: var(--white); padding: 36px 32px;
-  transition: background .2s;
-}
-.hw-card:hover { background: var(--cream); }
-.hw-vendor-tag {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-family: var(--font-ui); font-size: 10px; font-weight: 700;
-  letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 18px;
-}
-.hw-vendor-bar { width: 24px; height: 3px; border-radius: 2px; }
-.hw-card.nxp .hw-vendor-tag { color: #a06800; }
-.hw-card.nxp .hw-vendor-bar { background: var(--nxp); }
-.hw-card.nvidia .hw-vendor-tag { color: #3d6500; }
-.hw-card.nvidia .hw-vendor-bar { background: var(--nvidia); }
-.hw-card.lab .hw-vendor-tag { color: #006845; }
-.hw-card.lab .hw-vendor-bar { background: var(--accent); }
-.hw-title {
-  font-family: var(--font-display); font-size: 20px; font-weight: 800;
-  text-transform: uppercase; letter-spacing: 0.01em;
-  color: var(--dark); margin-bottom: 10px; line-height: 1.15;
-}
-.hw-desc { font-size: 14px; color: var(--mid); line-height: 1.65; }
-.hw-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 18px; }
-.hw-tag {
-  font-family: var(--font-ui); font-size: 10px; font-weight: 600;
-  letter-spacing: 0.06em; text-transform: uppercase;
-  background: var(--cream); color: var(--mid);
-  border-radius: 4px; padding: 4px 9px;
-}
+  .nav-divider {
+    width: 1px; height: 20px;
+    background: rgba(255,255,255,0.12);
+  }
 
-/* SERVICES */
-.services-section { background: var(--cream); padding: 80px 56px; }
-.services-grid {
-  display: grid; grid-template-columns: repeat(2, 1fr);
-  gap: 2px; background: var(--cream2);
-  border: 1px solid var(--cream2); margin-top: 52px;
-}
-.svc-card {
-  background: var(--cream); padding: 40px 36px; transition: background .2s;
-}
-.svc-card:hover { background: var(--white); }
-.svc-num {
-  font-family: var(--font-display); font-size: 13px; font-weight: 800;
-  letter-spacing: 0.1em; color: var(--light); margin-bottom: 16px;
-}
-.svc-title {
-  font-family: var(--font-display); font-size: 22px; font-weight: 900;
-  text-transform: uppercase; letter-spacing: 0.01em;
-  color: var(--dark); line-height: 1.1; margin-bottom: 12px;
-}
-.svc-desc { font-size: 14px; color: var(--mid); line-height: 1.7; margin-bottom: 20px; }
-.svc-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-.svc-list li {
-  font-size: 13px; color: var(--mid);
-  display: flex; align-items: flex-start; gap: 10px; line-height: 1.5;
-}
-.svc-list li::before { content: '—'; color: var(--light); flex-shrink: 0; }
+  .nav-lab {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
 
-/* PARTNERS */
-.partner-section {
-  background: var(--dark); padding: 80px 56px;
-  display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
-}
-.partner-section h2 {
-  font-family: var(--font-display); font-size: clamp(32px, 4vw, 52px);
-  font-weight: 900; text-transform: uppercase;
-  color: var(--white); line-height: 1.0; margin-bottom: 20px;
-}
-.partner-section p {
-  font-size: 16px; color: rgba(255,255,255,0.52); line-height: 1.75;
-}
-.partner-cards { display: flex; flex-direction: column; gap: 16px; }
-.partner-card {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 10px; padding: 24px 28px;
-  display: flex; align-items: center; gap: 20px;
-}
-.partner-logo-block {
-  width: 48px; height: 48px; border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--font-display); font-size: 13px; font-weight: 900;
-  flex-shrink: 0; letter-spacing: 0.04em;
-}
-.plogo-nxp  { background: var(--nxp);    color: #0b0e13; }
-.plogo-nvidia { background: var(--nvidia); color: #0b0e13; }
-.partner-card-name {
-  font-family: var(--font-ui); font-size: 13px; font-weight: 700;
-  color: var(--white); margin-bottom: 4px;
-}
-.partner-card-desc { font-size: 13px; color: rgba(255,255,255,0.38); line-height: 1.5; }
+  .nav-right { display: flex; align-items: center; gap: 28px; }
 
-/* CTA */
-.cta-section {
-  background: var(--purple); padding: 96px 56px;
-  text-align: center; position: relative; overflow: hidden;
-}
-.cta-section::before {
-  content: ''; position: absolute; inset: 0;
-  background-image:
-    linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
-  background-size: 60px 60px;
-}
-.cta-section h2 {
-  font-family: var(--font-display); font-size: clamp(36px, 5vw, 64px);
-  font-weight: 900; text-transform: uppercase;
-  color: var(--white); line-height: 1.0; margin-bottom: 20px;
-  position: relative; z-index: 1;
-}
-.cta-section p {
-  font-size: 17px; color: rgba(255,255,255,0.68);
-  line-height: 1.7; max-width: 520px; margin: 0 auto 40px;
-  position: relative; z-index: 1;
-}
-.cta-actions {
-  display: flex; gap: 14px; justify-content: center;
-  flex-wrap: wrap; position: relative; z-index: 1;
-}
-.btn-white {
-  display: inline-block; background: var(--white); color: var(--purple);
-  font-family: var(--font-ui); font-size: 14px; font-weight: 700;
-  padding: 13px 28px; border-radius: 100px; text-decoration: none;
-  transition: opacity .2s, transform .15s;
-}
-.btn-white:hover { opacity: 0.9; transform: translateY(-1px); }
+  .nav-link {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
 
-/* FOOTER */
-footer {
-  background: var(--white); border-top: 1px solid var(--border);
-  padding: 32px 56px; display: flex; align-items: center;
-  justify-content: space-between; flex-wrap: wrap; gap: 16px;
-}
-.footer-logo {
-  font-family: var(--font-display); font-size: 18px; font-weight: 900;
-  letter-spacing: 0.06em; text-transform: uppercase;
-  color: var(--dark); text-decoration: none;
-}
-.footer-links { display: flex; gap: 28px; }
-.footer-links a {
-  font-family: var(--font-ui); font-size: 13px; font-weight: 500;
-  color: var(--mid); text-decoration: none; transition: color .15s;
-}
-.footer-links a:hover { color: var(--dark); }
-.footer-right { font-family: var(--font-ui); font-size: 12px; color: var(--light); }
+  .nav-link:hover { color: var(--white); }
 
-@media (max-width: 900px) {
-  nav { padding: 0 20px; }
-  .nav-links { display: none; }
-  .hero-content { grid-template-columns: 1fr; padding: 0 24px 56px; gap: 28px; }
-  .intro-band { grid-template-columns: 1fr; padding: 56px 24px; gap: 32px; }
-  .stats-strip { grid-template-columns: repeat(2,1fr); padding: 0 24px; }
-  .stat-item { padding: 32px 16px 32px 0; }
-  .hw-section, .services-section { padding: 56px 24px; }
-  .partner-section { grid-template-columns: 1fr; gap: 40px; padding: 56px 24px; }
-  .cta-section { padding: 72px 24px; }
-  .hw-grid { grid-template-columns: 1fr; }
-  .services-grid { grid-template-columns: 1fr; }
-  footer { padding: 28px 24px; flex-direction: column; align-items: flex-start; }
-}
+  .nav-cta {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #fff;
+    background: var(--orange);
+    padding: 8px 18px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+
+  .nav-cta:hover { background: var(--orange2); }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 100px 48px 80px;
+    overflow: hidden;
+  }
+
+  .hero::after {
+    content: "";
+    position: absolute;
+    top: -20%; left: -10%;
+    width: 70%; height: 80%;
+    background: radial-gradient(ellipse, rgba(255,107,43,0.06) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 64px 64px;
+    pointer-events: none;
+  }
+
+  .hero-inner {
+    position: relative;
+    z-index: 2;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .hero-kicker {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .hero-kicker::before {
+    content: "";
+    display: inline-block;
+    width: 32px; height: 1px;
+    background: var(--orange);
+  }
+
+  .hero-h1 {
+    font-family: var(--font-disp);
+    font-size: clamp(52px, 8vw, 116px);
+    font-weight: 800;
+    line-height: 0.93;
+    letter-spacing: -0.03em;
+    color: var(--white);
+  }
+
+  .hero-h1 .line2 { color: var(--orange); display: block; }
+  .hero-h1 .line3 { color: rgba(255,255,255,0.18); display: block; }
+
+  .hero-sub {
+    max-width: 520px;
+    margin-top: 40px;
+    font-size: 17px;
+    font-weight: 300;
+    line-height: 1.75;
+    color: rgba(255,255,255,0.52);
+  }
+
+  .hero-actions { margin-top: 48px; display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+
+  .btn-primary {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #fff;
+    background: var(--orange);
+    padding: 14px 32px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+    display: inline-block;
+  }
+
+  .btn-primary:hover { background: var(--orange2); transform: translateY(-1px); }
+
+  .btn-secondary {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    border: 1px solid var(--border);
+    padding: 14px 28px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s;
+    display: inline-block;
+  }
+
+  .btn-secondary:hover { border-color: rgba(255,255,255,0.25); color: var(--white); }
+
+  /* PARTNER STRIP */
+  .partner-strip {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--bg2);
+    padding: 0 48px;
+  }
+
+  .partner-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: stretch;
+  }
+
+  .partner-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    white-space: nowrap;
+    padding: 28px 40px 28px 0;
+    border-right: 1px solid var(--border);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .partners { display: flex; align-items: stretch; flex: 1; }
+
+  .partner {
+    padding: 24px 36px;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    transition: background 0.2s;
+  }
+
+  .partner:last-child { border-right: none; }
+  .partner:hover { background: rgba(255,255,255,0.02); }
+
+  .partner-name {
+    font-family: var(--font-disp);
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: rgba(255,255,255,0.3);
+    transition: color 0.2s;
+  }
+
+  .partner:hover .partner-name { color: rgba(255,255,255,0.72); }
+
+  .partner-role {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .partner-status { font-family: var(--font-mono); font-size: 10px; color: var(--orange); letter-spacing: 0.08em; }
+  .partner-status.seeking { color: rgba(255,255,255,0.18); }
+
+  /* SHARED */
+  .section-wrap {
+    position: relative;
+    z-index: 1;
+    padding: 96px 48px;
+  }
+
+  .section-inner { max-width: 1200px; margin: 0 auto; }
+
+  .bg2 { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+  .section-tag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-tag::before { content: ""; width: 18px; height: 1px; background: var(--orange); }
+
+  .section-title {
+    font-family: var(--font-disp);
+    font-size: clamp(30px, 4vw, 50px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    color: var(--white);
+    margin-bottom: 52px;
+  }
+
+  /* ABOUT */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 96px;
+    align-items: start;
+  }
+
+  .about-body p {
+    font-size: 15px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.48);
+    line-height: 1.85;
+    margin-bottom: 16px;
+  }
+
+  .about-body strong { color: rgba(255,255,255,0.78); font-weight: 500; }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+
+  .stat-box {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    padding: 26px 22px;
+    transition: border-color 0.2s;
+  }
+
+  .stat-box:hover { border-color: rgba(255,107,43,0.25); }
+
+  .stat-num {
+    font-family: var(--font-disp);
+    font-size: 40px;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    color: var(--white);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .stat-num .acc { color: var(--orange); }
+
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* OFFER GRID */
+  .offer-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background: var(--border2);
+  }
+
+  .offer-card {
+    background: var(--bg2);
+    padding: 34px 30px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+  }
+
+  .offer-card::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--orange);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s ease;
+  }
+
+  .offer-card:hover { background: var(--bg3); }
+  .offer-card:hover::after { transform: scaleX(1); }
+
+  .offer-num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--orange);
+    letter-spacing: 0.15em;
+    opacity: 0.6;
+    margin-bottom: 14px;
+  }
+
+  .offer-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--white);
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+
+  .offer-desc {
+    font-size: 13.5px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.4);
+    line-height: 1.75;
+  }
+
+  /* HARDWARE */
+  .hw-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+
+  .hw-card {
+    border: 1px solid var(--border);
+    background: var(--bg2);
+    padding: 26px 22px;
+    border-radius: 8px;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .hw-card:hover { border-color: rgba(255,107,43,0.3); transform: translateY(-2px); }
+
+  .hw-vendor {
+    font-family: var(--font-disp);
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: rgba(255,255,255,0.28);
+    margin-bottom: 12px;
+    transition: color 0.2s;
+  }
+
+  .hw-card:hover .hw-vendor { color: rgba(255,255,255,0.68); }
+
+  .hw-items { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+
+  .hw-items li {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.2s;
+  }
+
+  .hw-card:hover .hw-items li { color: rgba(255,255,255,0.44); }
+
+  .hw-items li::before {
+    content: "";
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--orange);
+    flex-shrink: 0;
+    opacity: 0.55;
+  }
+
+  /* STARTUPS */
+  .startups-grid {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 96px;
+    align-items: start;
+  }
+
+  .startup-list { display: flex; flex-direction: column; gap: 3px; }
+
+  .startup-item {
+    border: 1px solid var(--border);
+    background: var(--bg);
+    padding: 18px 22px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    transition: border-color 0.2s;
+  }
+
+  .startup-item:hover { border-color: rgba(255,107,43,0.2); }
+
+  .startup-num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--orange);
+    opacity: 0.5;
+    flex-shrink: 0;
+    margin-top: 2px;
+    width: 20px;
+  }
+
+  .startup-text { font-size: 14px; font-weight: 400; color: rgba(255,255,255,0.58); line-height: 1.65; }
+  .startup-text strong { color: rgba(255,255,255,0.84); font-weight: 500; display: block; margin-bottom: 3px; font-size: 14.5px; }
+
+  /* NXP BOX */
+  .nxp-box {
+    border: 1px solid rgba(255,107,43,0.22);
+    background: rgba(255,107,43,0.025);
+    padding: 52px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+    border-radius: 4px;
+  }
+
+  .nxp-headline {
+    font-family: var(--font-disp);
+    font-size: clamp(26px, 3.5vw, 42px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    color: var(--white);
+    margin-bottom: 18px;
+  }
+
+  .nxp-headline .acc { color: var(--orange); }
+
+  .nxp-desc {
+    font-size: 14.5px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.46);
+    line-height: 1.8;
+  }
+
+  .nxp-proposals { display: flex; flex-direction: column; gap: 18px; }
+
+  .nxp-proposal { display: flex; gap: 16px; align-items: flex-start; }
+
+  .nxp-icon {
+    width: 30px; height: 30px;
+    background: var(--orange-dim);
+    border: 1px solid rgba(255,107,43,0.2);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--orange);
+    font-weight: 500;
+  }
+
+  .nxp-proposal-body strong {
+    display: block;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.78);
+    margin-bottom: 4px;
+  }
+
+  .nxp-proposal-body p {
+    font-size: 13px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.36);
+    line-height: 1.65;
+  }
+
+  /* CTA */
+  .cta-section {
+    position: relative;
+    z-index: 1;
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    padding: 96px 48px;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .cta-section::before {
+    content: "";
+    position: absolute;
+    bottom: -150px; right: -150px;
+    width: 480px; height: 480px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,107,43,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .cta-inner { position: relative; z-index: 1; max-width: 600px; margin: 0 auto; }
+
+  .cta-title {
+    font-family: var(--font-disp);
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1.0;
+    color: var(--white);
+    margin-bottom: 18px;
+  }
+
+  .cta-title .acc { color: var(--orange); }
+
+  .cta-sub {
+    font-size: 16px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.42);
+    line-height: 1.75;
+    margin-bottom: 36px;
+  }
+
+  .cta-email {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: rgba(255,255,255,0.24);
+    margin-top: 18px;
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    transition: color 0.2s;
+  }
+
+  .cta-email:hover { color: rgba(255,255,255,0.55); }
+
+  /* FOOTER */
+  footer {
+    position: relative;
+    z-index: 1;
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+    padding: 28px 48px;
+  }
+
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-logo-wrap { display: flex; align-items: center; gap: 14px; text-decoration: none; }
+  .footer-logo-wrap img { height: 16px; width: auto; opacity: 0.35; }
+  .footer-divider { width: 1px; height: 14px; background: rgba(255,255,255,0.1); }
+  .footer-sub { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.2); }
+  .footer-copy { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; color: rgba(255,255,255,0.14); }
+
+  /* SCROLL FADE */
+  .sf { opacity: 0; transform: translateY(16px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .sf.visible { opacity: 1; transform: translateY(0); }
+
+  /* HERO ANIM */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  .hero-kicker { animation: fadeUp 0.6s ease 0.1s both; }
+  .hero-h1     { animation: fadeUp 0.7s ease 0.22s both; }
+  .hero-sub    { animation: fadeUp 0.6s ease 0.38s both; }
+  .hero-actions{ animation: fadeUp 0.6s ease 0.52s both; }
+
+  /* RESPONSIVE */
+  @media (max-width: 960px) {
+    nav { padding: 0 24px; }
+    .hero { padding: 90px 24px 60px; }
+    .about-grid { grid-template-columns: 1fr; gap: 44px; }
+    .offer-grid { grid-template-columns: 1fr; }
+    .hw-grid { grid-template-columns: repeat(2,1fr); }
+    .startups-grid { grid-template-columns: 1fr; gap: 36px; }
+    .nxp-box { grid-template-columns: 1fr; gap: 36px; padding: 32px; }
+    .section-wrap { padding: 64px 24px; }
+    .partner-inner { flex-direction: column; }
+    .partner-label { border-right: none; border-bottom: 1px solid var(--border); padding: 20px 0; }
+    .partners { flex-direction: column; }
+    .partner { border-right: none; border-bottom: 1px solid var(--border); padding: 18px 0; }
+    .cta-section, footer { padding: 64px 24px; }
+    .footer-inner { flex-direction: column; gap: 12px; text-align: center; }
+  }
 </style>
 </head>
 <body>
 
 <nav>
-  <a href="https://resolutis.com" class="logo">R≡SOLUTIS</a>
-  <ul class="nav-links">
-    <li><a href="https://resolutis.com/about/">About</a></li>
-    <li><a href="https://resolutis.com/services/">Services</a></li>
-    <li><a href="https://resolutis.com/blog/">Blog</a></li>
-    <li><a href="https://resolutis.com/contact/">Contact</a></li>
-  </ul>
+  <a href="https://resolutis.com" class="nav-logo">
+    <img src="data:image/png;base64,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" alt="Resolutis">
+    <div class="nav-divider"></div>
+    <span class="nav-lab">IoT Lab</span>
+  </a>
   <div class="nav-right">
-    <a href="https://www.linkedin.com/company/resolutis-com/" class="nav-li">in</a>
-    <a href="https://calendly.com/john-resolutis/30-minute-consultation" class="btn-pill">Book a call</a>
+    <a href="#about" class="nav-link">About</a>
+    <a href="#hardware" class="nav-link">Hardware</a>
+    <a href="#startups" class="nav-link">Startups</a>
+    <a href="#contact" class="nav-cta">Get Involved</a>
   </div>
 </nav>
 
+<!-- HERO -->
 <section class="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-texture"></div>
-  <div class="hero-glow"></div>
-  <div class="hero-glow2"></div>
-  <div class="hero-traces">
-    <svg viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-      <g stroke="white" stroke-width="1" fill="none">
-        <path d="M820 0 L820 220 L1120 220 L1120 420 L1320 420"/>
-        <path d="M920 0 L920 160 L1220 160 L1220 360 L1440 360"/>
-        <path d="M1060 0 L1060 100 L1360 100"/>
-        <path d="M1440 260 L1300 260 L1300 460 L1060 460 L1060 620"/>
-        <circle cx="820" cy="220" r="5" fill="white" opacity="0.8"/>
-        <circle cx="1120" cy="220" r="5" fill="white" opacity="0.8"/>
-        <circle cx="1120" cy="420" r="5" fill="white" opacity="0.8"/>
-        <circle cx="920" cy="160" r="5" fill="white" opacity="0.8"/>
-        <circle cx="1220" cy="160" r="5" fill="white" opacity="0.8"/>
-        <circle cx="1300" cy="260" r="5" fill="white" opacity="0.8"/>
-        <circle cx="1060" cy="460" r="5" fill="white" opacity="0.8"/>
-        <rect x="1290" y="400" width="44" height="44" rx="4"/>
-        <rect x="1070" y="195" width="88" height="42" rx="4"/>
-        <path d="M200 800 L200 580 L500 580 L500 380 L700 380"/>
-        <path d="M350 800 L350 650 L600 650"/>
-        <circle cx="200" cy="580" r="4" fill="white" opacity="0.6"/>
-        <circle cx="500" cy="580" r="4" fill="white" opacity="0.6"/>
-        <circle cx="500" cy="380" r="4" fill="white" opacity="0.6"/>
-      </g>
-    </svg>
-  </div>
-
-  <div class="hero-content">
-    <div class="hero-left">
-      <div class="hero-badge">
-        <div class="hero-badge-dot"></div>
-        Manchester · Now open
-      </div>
-      <h1>IoT &amp;<br>Edge AI<br><em>Lab</em></h1>
-    </div>
-    <div class="hero-right">
-      <div class="hero-chips">
-        <span class="hero-chip chip-nxp">NXP CTO Office</span>
-        <span class="hero-chip chip-nv">NVIDIA Connect Partner</span>
-      </div>
-      <p class="hero-sub">
-        Manchester's hands-on space for embedded systems and edge AI. NXP i.MX 9x, i.MX 93W, NTAG 424 DNA and NVIDIA Jetson Orin. Real silicon, real deployments.
-      </p>
-      <div class="hero-actions">
-        <a href="https://calendly.com/john-resolutis/30-minute-consultation" class="btn-pill">Begin Now</a>
-        <a href="#hardware" class="btn-pill-outline">Explore the lab</a>
-      </div>
+  <div class="hero-inner">
+    <div class="hero-kicker">Manchester IoT Lab</div>
+    <h1 class="hero-h1">
+      Northern England&#8217;s
+      <span class="line2">Edge AI &amp; IoT</span>
+      <span class="line3">Proving Ground.</span>
+    </h1>
+    <p class="hero-sub">A practitioner-led lab enabling hardware startups and scale-ups to build on NXP and NVIDIA silicon faster. Based in Manchester. Operated by Resolutis.</p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">Get Involved</a>
+      <a href="#about" class="btn-secondary">Learn More</a>
     </div>
   </div>
 </section>
 
-<section class="intro-band">
-  <div>
-    <h2>Strategic technology leadership<br>without the full-time cost.</h2>
-  </div>
-  <div>
-    <p>Most IoT and edge AI projects stall at the same point. The hardware works. The proof of concept runs. But turning that into something production-ready — secure, observable, integrated with the rest of the business — is where things get complicated.</p>
-    <p>Resolutis IoT Lab exists for that gap. Operated by engineers who've shipped at Apple, Google, JLR and NXP. NVIDIA Connect Partner. Close relationship with NXP's CTO office. The North of England's only dedicated embedded and edge AI lab.</p>
-  </div>
-</section>
-
-<div class="stats-strip">
-  <div class="stat-item">
-    <div class="stat-num">25<span>+</span></div>
-    <div class="stat-label">Years embedded</div>
-  </div>
-  <div class="stat-item" style="padding-left:32px">
-    <div class="stat-num">£18<span>M</span></div>
-    <div class="stat-label">Revenue delivered</div>
-  </div>
-  <div class="stat-item" style="padding-left:32px">
-    <div class="stat-num">4</div>
-    <div class="stat-label">Big tech partners</div>
-  </div>
-  <div class="stat-item" style="padding-left:32px">
-    <div class="stat-num" style="font-size:40px;letter-spacing:0.02em">MCR</div>
-    <div class="stat-label">North England IoT Lab</div>
+<!-- PARTNER STRIP -->
+<div class="partner-strip">
+  <div class="partner-inner">
+    <div class="partner-label">Lab Partners</div>
+    <div class="partners">
+      <div class="partner">
+        <div class="partner-name">NXP</div>
+        <div class="partner-role">Silicon Partner</div>
+        <div class="partner-status">Founding Partner</div>
+      </div>
+      <div class="partner">
+        <div class="partner-name">NVIDIA</div>
+        <div class="partner-role">AI Hardware</div>
+        <div class="partner-status">Connect Member</div>
+      </div>
+      <div class="partner">
+        <div class="partner-name">ARM</div>
+        <div class="partner-role">Architecture</div>
+        <div class="partner-status">IoT Partner</div>
+      </div>
+      <div class="partner">
+        <div class="partner-name">LF Edge</div>
+        <div class="partner-role">Ecosystem</div>
+        <div class="partner-status">Contributor</div>
+      </div>
+      <div class="partner">
+        <div class="partner-name">Your Co.</div>
+        <div class="partner-role">Founding Partner</div>
+        <div class="partner-status seeking">Open</div>
+      </div>
+    </div>
   </div>
 </div>
 
-<section class="hw-section" id="hardware">
-  <div class="section-eyebrow">Lab hardware</div>
-  <h2 class="section-heading">Silicon you<br>can build on</h2>
-  <p class="section-intro">Direct access to the latest NXP and NVIDIA silicon — the same platforms powering next-generation edge AI and IoT products.</p>
-  <div class="hw-grid">
-    <div class="hw-card nxp">
-      <div class="hw-vendor-tag"><div class="hw-vendor-bar"></div>NXP</div>
-      <div class="hw-title">i.MX 93W Application Processor</div>
-      <div class="hw-desc">Latest-gen i.MX 9 series with eIQ ML acceleration, integrated wireless, and EdgeLock security. Purpose-built for edge AI inference in constrained environments.</div>
-      <div class="hw-tags">
-        <span class="hw-tag">eIQ</span><span class="hw-tag">EdgeLock</span><span class="hw-tag">Wireless</span><span class="hw-tag">Linux</span>
-      </div>
-    </div>
-    <div class="hw-card nxp">
-      <div class="hw-vendor-tag"><div class="hw-vendor-bar"></div>NXP</div>
-      <div class="hw-title">i.MX 9x Series EVKs</div>
-      <div class="hw-desc">Full i.MX 9 family evaluation kits. Embedded Linux, Zephyr RTOS, Rust firmware, full BSPs — plus direct NXP engineering access through our CTO office relationship.</div>
-      <div class="hw-tags">
-        <span class="hw-tag">i.MX 93</span><span class="hw-tag">i.MX 95</span><span class="hw-tag">Rust</span><span class="hw-tag">Yocto</span>
-      </div>
-    </div>
-    <div class="hw-card nxp">
-      <div class="hw-vendor-tag"><div class="hw-vendor-bar"></div>NXP</div>
-      <div class="hw-title">NTAG 424 DNA</div>
-      <div class="hw-desc">Secure NFC authentication silicon with NIST SP 800-108 key diversification. In active production on DeLux — a whisky NFC authentication platform built by Resolutis.</div>
-      <div class="hw-tags">
-        <span class="hw-tag">NFC</span><span class="hw-tag">SUN/SDM</span><span class="hw-tag">AES-128</span><span class="hw-tag">NDEF</span>
-      </div>
-    </div>
-    <div class="hw-card nvidia">
-      <div class="hw-vendor-tag"><div class="hw-vendor-bar"></div>NVIDIA</div>
-      <div class="hw-title">Jetson Orin NX / AGX</div>
-      <div class="hw-desc">NVIDIA's most capable edge AI platform. 1024-core Ampere GPU, up to 275 TOPS. TensorRT, DeepStream, ROS 2. Production-grade inference at the edge.</div>
-      <div class="hw-tags">
-        <span class="hw-tag">TensorRT</span><span class="hw-tag">CUDA</span><span class="hw-tag">DeepStream</span><span class="hw-tag">ROS 2</span>
-      </div>
-    </div>
-    <div class="hw-card nvidia">
-      <div class="hw-vendor-tag"><div class="hw-vendor-bar"></div>NVIDIA</div>
-      <div class="hw-title">eIQ Agentic AI Framework</div>
-      <div class="hw-desc">NXP's eIQ agentic AI stack running on NVIDIA-class hardware. Bridging MCU and MPU boundaries for real multi-vendor edge AI deployments.</div>
-      <div class="hw-tags">
-        <span class="hw-tag">eIQ</span><span class="hw-tag">Agentic AI</span><span class="hw-tag">MCU+MPU</span>
-      </div>
-    </div>
-    <div class="hw-card lab">
-      <div class="hw-vendor-tag"><div class="hw-vendor-bar"></div>Lab infrastructure</div>
-      <div class="hw-title">Edge-to-Cloud Stack</div>
-      <div class="hw-desc">LTE-M / NB-IoT via Actility ThingPark, PN532 NFC provisioning rigs, Kafka / Redpanda pipelines, and Conduo — Resolutis's own Rust-based integration platform.</div>
-      <div class="hw-tags">
-        <span class="hw-tag">LTE-M</span><span class="hw-tag">Kafka</span><span class="hw-tag">Conduo</span><span class="hw-tag">AWS</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="services-section" id="services">
-  <div class="section-eyebrow">What we do</div>
-  <h2 class="section-heading">From silicon<br>to production</h2>
-  <p class="section-intro">Fractional CTO and hands-on engineering for companies building on NXP and NVIDIA hardware.</p>
-  <div class="services-grid">
-    <div class="svc-card">
-      <div class="svc-num">01</div>
-      <div class="svc-title">NXP Silicon Integration</div>
-      <div class="svc-desc">Deep i.MX 9x and NTAG 424 DNA expertise, with direct NXP CTO office access that shortens your development cycle.</div>
-      <ul class="svc-list">
-        <li>Embedded Linux &amp; Yocto build systems</li>
-        <li>Rust firmware for constrained targets</li>
-        <li>NFC / SUN / SDM authentication systems</li>
-        <li>Key diversification &amp; EdgeLock security</li>
-      </ul>
-    </div>
-    <div class="svc-card">
-      <div class="svc-num">02</div>
-      <div class="svc-title">Edge AI &amp; NVIDIA Jetson</div>
-      <div class="svc-desc">NVIDIA Connect Partner. TensorRT model optimisation, inference pipelines, and EdgeOps observability — the part that usually gets skipped.</div>
-      <ul class="svc-list">
-        <li>TensorRT / ONNX model deployment</li>
-        <li>Edge inference observability (EdgeOps)</li>
-        <li>Multi-modal sensor fusion pipelines</li>
-        <li>Jetson Orin NX / AGX bring-up</li>
-      </ul>
-    </div>
-    <div class="svc-card">
-      <div class="svc-num">03</div>
-      <div class="svc-title">Fractional CTO Leadership</div>
-      <div class="svc-desc">Senior embedded and edge AI leadership without a full-time hire. Strategy, architecture, team building — from £1,020/day.</div>
-      <ul class="svc-list">
-        <li>Technical roadmap &amp; architecture</li>
-        <li>Due diligence &amp; pre-investment review</li>
-        <li>Team hiring and structure</li>
-        <li>Board-level technical reporting</li>
-      </ul>
-    </div>
-    <div class="svc-card">
-      <div class="svc-num">04</div>
-      <div class="svc-title">IoT Data Pipelines</div>
-      <div class="svc-desc">Edge-to-cloud data architecture using Conduo — Resolutis's own Rust-based integration platform for IoT data ingestion and ERP connectors.</div>
-      <ul class="svc-list">
-        <li>Conduo integration platform (Rust)</li>
-        <li>Kafka / Redpanda event streaming</li>
-        <li>LTE-M / NB-IoT connectivity</li>
-        <li>SAP, ERP, and cloud connectors</li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<section class="partner-section">
-  <div>
-    <h2>Trusted by the people who make the silicon.</h2>
-    <p>Working closely with NXP's CTO office and as an NVIDIA Connect Partner, Resolutis has the relationships that matter when you're building on serious hardware. Not a reseller. Not a distributor. An engineering partner with direct access and roadmap visibility.</p>
-  </div>
-  <div class="partner-cards">
-    <div class="partner-card">
-      <div class="partner-logo-block plogo-nxp">NXP</div>
+<!-- ABOUT -->
+<div class="section-wrap" id="about">
+  <div class="section-inner">
+    <div class="about-grid">
       <div>
-        <div class="partner-card-name">NXP CTO Office relationship</div>
-        <div class="partner-card-desc">Direct engineering access. Roadmap visibility. i.MX 9x, NTAG 424 DNA, eIQ Framework.</div>
+        <div class="section-tag">About the Lab</div>
+        <h2 class="section-title">Built for practitioners, not pitch decks.</h2>
+        <div class="about-body">
+          <p>The Manchester IoT Lab is a <strong>hands-on technical resource</strong> for hardware startups and engineering teams building edge AI and IoT products. We provide access to production silicon, embedded engineering depth, and a community of practitioners in the North of England.</p>
+          <p>Operated by Resolutis, the lab brings <strong>25 years of embedded systems experience</strong> from Apple, Google, JLR, and NXP/Mobica to bear on the practical problems startups face when moving from development kit to production hardware.</p>
+          <p>Manchester and the Sheffield corridor is underserved for this kind of support. The lab changes that.</p>
+        </div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-box sf">
+          <div class="stat-num">25<span class="acc">+</span></div>
+          <div class="stat-label">Years embedded systems depth</div>
+        </div>
+        <div class="stat-box sf">
+          <div class="stat-num"><span class="acc">3</span></div>
+          <div class="stat-label">Active NXP silicon programmes in production</div>
+        </div>
+        <div class="stat-box sf">
+          <div class="stat-num">NV</div>
+          <div class="stat-label">NVIDIA Connect member</div>
+        </div>
+        <div class="stat-box sf">
+          <div class="stat-num"><span class="acc">MCR</span></div>
+          <div class="stat-label">Manchester, Northern England</div>
+        </div>
       </div>
     </div>
-    <div class="partner-card">
-      <div class="partner-logo-block plogo-nvidia">NV</div>
+  </div>
+</div>
+
+<!-- WHAT WE OFFER -->
+<div class="section-wrap bg2">
+  <div class="section-inner">
+    <div class="section-tag">What the Lab Offers</div>
+    <h2 class="section-title">From dev kit to production.</h2>
+    <div class="offer-grid">
+      <div class="offer-card sf">
+        <div class="offer-num">// 01</div>
+        <div class="offer-title">Hardware Access</div>
+        <div class="offer-desc">NXP i.MX 9x and i.MX 93W evaluation boards, NTAG 424 DNA samples, PN532 rigs, Jetson Orin hardware, and Abeeway cellular trackers. Access production silicon before committing to procurement.</div>
+      </div>
+      <div class="offer-card sf">
+        <div class="offer-num">// 02</div>
+        <div class="offer-title">Technical Deep Dives</div>
+        <div class="offer-desc">Quarterly hands-on workshops covering BSP bring-up, edge AI inference deployment, NFC authentication architecture, and IoT connectivity stacks. Run by practitioners, not slides.</div>
+      </div>
+      <div class="offer-card sf">
+        <div class="offer-num">// 03</div>
+        <div class="offer-title">Embedded Engineering Support</div>
+        <div class="offer-desc">Direct access to Resolutis engineering depth for prototyping sprints, architecture reviews, and production bring-up. Yocto, TensorRT, eIQ, NTAG 424 DNA, LTE-M. Real problems, real silicon.</div>
+      </div>
+      <div class="offer-card sf">
+        <div class="offer-num">// 04</div>
+        <div class="offer-title">NXP Startup Programme Access</div>
+        <div class="offer-desc">Lab members building on NXP silicon get a fast-track referral into NXP&#8217;s startup partnering programme via Resolutis as named sponsor.</div>
+      </div>
+      <div class="offer-card sf">
+        <div class="offer-num">// 05</div>
+        <div class="offer-title">Community &amp; Network</div>
+        <div class="offer-desc">Monthly meetups connecting embedded engineers, hardware founders, and IoT product teams across Manchester and the Northern England corridor. No fluff, just practitioners.</div>
+      </div>
+      <div class="offer-card sf">
+        <div class="offer-num">// 06</div>
+        <div class="offer-title">Prototyping Sprints</div>
+        <div class="offer-desc">A 10-day structured sprint to prove your IoT connectivity or edge AI inference concept on real hardware before committing to a full build. Your hardware or ours.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HARDWARE -->
+<div class="section-wrap" id="hardware">
+  <div class="section-inner">
+    <div class="section-tag">Lab Hardware</div>
+    <h2 class="section-title">Production silicon, not dev kits.</h2>
+    <div class="hw-grid">
+      <div class="hw-card sf">
+        <div class="hw-vendor">NXP</div>
+        <ul class="hw-items">
+          <li>i.MX 93 EVK</li>
+          <li>i.MX 93W</li>
+          <li>NTAG 424 DNA</li>
+          <li>NTAG 224 DNA</li>
+          <li>PN532 NFC Reader</li>
+          <li>SE050 Secure Element</li>
+        </ul>
+      </div>
+      <div class="hw-card sf">
+        <div class="hw-vendor">NVIDIA</div>
+        <ul class="hw-items">
+          <li>Jetson AGX Orin</li>
+          <li>Jetson Orin NX</li>
+          <li>Jetson Orin Nano</li>
+          <li>TensorRT runtime</li>
+          <li>DeepStream SDK</li>
+        </ul>
+      </div>
+      <div class="hw-card sf">
+        <div class="hw-vendor">Cellular IoT</div>
+        <ul class="hw-items">
+          <li>Abeeway Micro Tracker</li>
+          <li>Abeeway Industrial Tracker</li>
+          <li>Actility ThingPark</li>
+          <li>LTE-M / NB-IoT</li>
+          <li>LoRaWAN gateway</li>
+        </ul>
+      </div>
+      <div class="hw-card sf">
+        <div class="hw-vendor">Dev Stack</div>
+        <ul class="hw-items">
+          <li>Yocto / OpenEmbedded</li>
+          <li>Rust embedded toolchain</li>
+          <li>eIQ ML toolkit</li>
+          <li>AWS IoT Core</li>
+          <li>Kafka / Redpanda</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STARTUPS -->
+<div class="section-wrap bg2" id="startups">
+  <div class="section-inner">
+    <div class="section-tag">For Startups</div>
+    <div class="startups-grid">
       <div>
-        <div class="partner-card-name">NVIDIA Connect Partner</div>
-        <div class="partner-card-desc">Jetson Orin, TensorRT, DeepStream. NVIDIA-certified edge AI engineering.</div>
+        <h2 class="section-title" style="margin-bottom:18px">Who the lab is built for.</h2>
+        <p style="font-size:14.5px;font-weight:300;color:rgba(255,255,255,0.4);line-height:1.8;">Hardware startups in the North of England building on embedded and edge AI technology. If you are hitting the wall between a development kit and production hardware, this is where you come.</p>
+        <a href="#contact" class="btn-primary" style="display:inline-flex;margin-top:28px">Get in touch</a>
+      </div>
+      <div class="startup-list">
+        <div class="startup-item sf">
+          <span class="startup-num">01</span>
+          <div class="startup-text"><strong>NFC and RFID authentication companies</strong>Asset provenance, anti-counterfeit, and proof-of-purchase products building on NTAG 424 DNA and NXP silicon.</div>
+        </div>
+        <div class="startup-item sf">
+          <span class="startup-num">02</span>
+          <div class="startup-text"><strong>Edge AI product companies</strong>Teams with a trained model hitting the wall deploying it on Jetson or i.MX hardware in production.</div>
+        </div>
+        <div class="startup-item sf">
+          <span class="startup-num">03</span>
+          <div class="startup-text"><strong>IoT and asset tracking startups</strong>Products using LTE-M, NB-IoT, or LoRaWAN cellular connectivity for industrial or logistics applications.</div>
+        </div>
+        <div class="startup-item sf">
+          <span class="startup-num">04</span>
+          <div class="startup-text"><strong>Enterprise integration plays</strong>Connecting edge devices and sensors to ERP and cloud backends.</div>
+        </div>
+        <div class="startup-item sf">
+          <span class="startup-num">05</span>
+          <div class="startup-text"><strong>Spirits, whisky, and luxury goods tech</strong>A genuine Northern England niche with active production proof points already running through the lab.</div>
+        </div>
       </div>
     </div>
   </div>
-</section>
+</div>
 
-<section class="cta-section">
-  <h2>Building on NXP or<br>NVIDIA silicon?</h2>
-  <p>If your project is stalled, scoped wrong, or needs someone who's shipped this hardware before — let's talk. Direct NXP and NVIDIA access included.</p>
-  <div class="cta-actions">
-    <a href="https://calendly.com/john-resolutis/30-minute-consultation" class="btn-white">Book a 30-min call</a>
-    <a href="https://resolutis.com/contact/" class="btn-pill-outline">Send a message</a>
+<!-- NXP PARTNERSHIP -->
+<div class="section-wrap">
+  <div class="section-inner">
+    <div class="nxp-box">
+      <div>
+        <div class="section-tag">NXP Partnership</div>
+        <h2 class="nxp-headline">NXP&#8217;s beachhead in <span class="acc">Northern England.</span></h2>
+        <p class="nxp-desc">The Manchester IoT Lab is positioned as NXP&#8217;s strategic presence in the Northern England embedded and edge AI ecosystem. Resolutis provides the operational backbone and engineering credibility. NXP gets a developer pipeline, brand presence, and a real-world proving ground for their silicon.</p>
+      </div>
+      <div class="nxp-proposals">
+        <div class="nxp-proposal sf">
+          <div class="nxp-icon">01</div>
+          <div class="nxp-proposal-body">
+            <strong>NXP Validated Lab</strong>
+            <p>A formal NXP designation carried by the lab when enabling startups on NXP silicon — i.MX 9x, NTAG 424 DNA, SE050.</p>
+          </div>
+        </div>
+        <div class="nxp-proposal sf">
+          <div class="nxp-icon">02</div>
+          <div class="nxp-proposal-body">
+            <strong>Startup Fast-Track</strong>
+            <p>Lab members building on NXP silicon get a direct referral into NXP&#8217;s startup partnering programme via Resolutis as named sponsor.</p>
+          </div>
+        </div>
+        <div class="nxp-proposal sf">
+          <div class="nxp-icon">03</div>
+          <div class="nxp-proposal-body">
+            <strong>Build on NXP Workshop Series</strong>
+            <p>Co-branded quarterly events counting toward NXP developer community activity in the North of England.</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-</section>
+</div>
 
+<!-- CTA -->
+<div class="cta-section" id="contact">
+  <div class="cta-inner">
+    <div class="section-tag" style="justify-content:center;margin-bottom:18px">Get Involved</div>
+    <h2 class="cta-title">Join the <span class="acc">lab.</span></h2>
+    <p class="cta-sub">Whether you are a startup building on edge hardware, a silicon vendor looking for a Northern England presence, or an engineer who wants to be part of the community, get in touch.</p>
+    <a href="mailto:john@resolutis.com" class="btn-primary">Start the conversation</a>
+    <a href="mailto:john@resolutis.com" class="cta-email">john@resolutis.com</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
 <footer>
-  <a href="https://resolutis.com" class="footer-logo">R≡SOLUTIS · IoT Lab</a>
-  <div class="footer-links">
-    <a href="https://resolutis.com/about/">About</a>
-    <a href="https://resolutis.com/services/">Services</a>
-    <a href="https://resolutis.com/blog/">Blog</a>
-    <a href="https://resolutis.com/contact/">Contact</a>
-    <a href="https://www.linkedin.com/company/resolutis-com/">LinkedIn</a>
+  <div class="footer-inner">
+    <a href="https://resolutis.com" class="footer-logo-wrap">
+      <img src="data:image/png;base64,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" alt="Resolutis">
+      <div class="footer-divider"></div>
+      <span class="footer-sub">Manchester IoT Lab</span>
+    </a>
+    <div class="footer-copy">&#169; 2026 Resolutis Ltd &middot; Registered in England &amp; Wales &middot; Manchester</div>
   </div>
-  <div class="footer-right">iotlab.resolutis.com</div>
 </footer>
+
+<script>
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add("visible"); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll(".sf").forEach(el => obs.observe(el));
+</script>
 
 </body>
 </html>
