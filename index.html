@@ -3,543 +3,589 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Manchester Edge AI Lab — Coming Soon</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<title>Resolutis Edge AI Lab — Edge AI, Computer Vision & Embedded Systems</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Barlow:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg:     #06080c;
-    --bg2:    #0a0d14;
-    --white:  #e8ecf0;
-    --muted:  #4a5568;
-    --orange: #ff6b2b;
-    --orange2:#e05520;
-    --border: rgba(255,255,255,0.06);
-    --glow:   rgba(255,107,43,0.12);
-  }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { height: 100%; }
+:root {
+  --bg: #0a0a0a;
+  --surface: #111111;
+  --orange: #e84a1e;
+  --text: #f0ece4;
+  --muted: #989898;
+  --rule: #1c1c1c;
+  --card: #141414;
+}
 
-  body {
-    font-family: "DM Sans", sans-serif;
-    background: var(--bg);
-    color: var(--white);
-    overflow-x: hidden;
-    min-height: 100vh;
-    -webkit-font-smoothing: antialiased;
-  }
+html { scroll-behavior: smooth; }
 
-  /* ── ANIMATED GRID ── */
-  .grid-bg {
-    position: fixed; inset: 0; z-index: 0;
-    background-image:
-      linear-gradient(rgba(255,107,43,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,107,43,0.03) 1px, transparent 1px);
-    background-size: 56px 56px;
-    animation: gridDrift 40s linear infinite;
-  }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Barlow', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+  cursor: none;
+}
 
-  @keyframes gridDrift {
-    0%   { background-position: 0 0; }
-    100% { background-position: 56px 56px; }
-  }
+.cursor {
+  width: 8px; height: 8px;
+  background: var(--orange);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  transition: transform 0.1s ease;
+  mix-blend-mode: difference;
+}
 
-  /* ── RADIAL GLOWS ── */
-  .glow-tl {
-    position: fixed; top: -200px; left: -200px;
-    width: 700px; height: 700px; border-radius: 50%;
-    background: radial-gradient(circle, rgba(255,107,43,0.07) 0%, transparent 65%);
-    pointer-events: none; z-index: 0;
-    animation: breathe 8s ease-in-out infinite;
-  }
+.cursor-ring {
+  width: 32px; height: 32px;
+  border: 1px solid rgba(232,74,30,0.4);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  z-index: 9998;
+  transition: all 0.15s ease;
+}
 
-  .glow-br {
-    position: fixed; bottom: -200px; right: -200px;
-    width: 600px; height: 600px; border-radius: 50%;
-    background: radial-gradient(circle, rgba(255,107,43,0.05) 0%, transparent 65%);
-    pointer-events: none; z-index: 0;
-    animation: breathe 10s ease-in-out infinite reverse;
-  }
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9997;
+  opacity: 0.3;
+}
 
-  @keyframes breathe {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50%       { transform: scale(1.15); opacity: 0.7; }
-  }
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 1000;
+  padding: 0 48px; height: 56px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(10,10,10,0.9);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--rule);
+}
+.nav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.nav-logo { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 15px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text); }
+.nav-logo span { color: var(--orange); }
+.nav-sep { width: 1px; height: 16px; background: var(--rule); }
+.nav-sub { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.nav-right { display: flex; align-items: center; gap: 32px; }
+.nav-links { display: flex; gap: 28px; list-style: none; }
+.nav-links a { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+.nav-links a:hover { color: var(--orange); }
+.nav-cta { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--bg); background: var(--orange); padding: 8px 18px; text-decoration: none; transition: all 0.2s; }
+.nav-cta:hover { background: #ff5a2e; }
 
-  /* ── SCAN LINE ── */
-  @keyframes scan {
-    0%   { transform: translateY(-100%); }
-    100% { transform: translateY(100vh); }
-  }
+/* HERO — fixed: padding-top pushes content away from nav, content sits naturally */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 60vh;
+  padding: 56px 48px 80px;
+  position: relative;
+  overflow: hidden;
+}
 
-  body::after {
-    content: "";
-    position: fixed; left: 0; right: 0; top: 0;
-    height: 3px;
-    background: linear-gradient(transparent, rgba(255,107,43,0.06), transparent);
-    animation: scan 12s linear infinite;
-    pointer-events: none; z-index: 0;
-  }
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+  pointer-events: none; z-index: 1;
+}
 
-  /* ── LAYOUT ── */
-  .page {
-    position: relative; z-index: 1;
-    min-height: 100vh;
-    display: flex; flex-direction: column;
-  }
+/* ghost text — bumped opacity so it's actually visible */
+.hero-bg-text {
+  position: absolute;
+  bottom: 100px;
+  top: 50%; left: -20px;
+  transform: translateY(-50%);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900;
+  font-size: clamp(180px, 22vw, 320px);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: rgba(255,255,255,0.04);
+  pointer-events: none;
+  white-space: nowrap;
+  text-transform: uppercase;
+  user-select: none;
+}
 
-  /* ── NAV ── */
-  nav {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 32px 48px;
-  }
+.hero-content { position: relative; z-index: 2; max-width: 1100px; }
 
-  .nav-logo { display: flex; align-items: center; gap: 14px; text-decoration: none; }
-  .nav-logo img { height: 18px; width: auto; display: block; }
-  .nav-divider { width: 1px; height: 18px; background: rgba(255,255,255,0.12); }
-  .nav-lab {
-    font-family: "DM Mono", monospace;
-    font-size: 10px; font-weight: 400;
-    letter-spacing: 0.18em; text-transform: uppercase;
-    color: var(--muted);
-  }
+.hero-eyebrow {
+  font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--orange); margin-bottom: 28px;
+  display: flex; align-items: center; gap: 12px;
+  opacity: 0; animation: fadeUp 0.5s ease forwards 0.1s;
+}
+.hero-eyebrow::before { content: ''; width: 32px; height: 1px; background: var(--orange); }
 
-  .nav-status {
-    display: flex; align-items: center; gap: 8px;
-    font-family: "DM Mono", monospace;
-    font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
-    color: var(--orange);
-  }
+.hero-title {
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 900;
+  font-size: clamp(72px, 11vw, 148px); line-height: 0.9;
+  letter-spacing: -0.02em; text-transform: uppercase; margin-bottom: 40px;
+  opacity: 0; animation: fadeUp 0.6s ease forwards 0.2s;
+}
+.hero-title .line-orange { color: var(--orange); }
+.hero-title .line-dim { color: rgba(240,236,228,0.2); }
 
-  .status-dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: var(--orange);
-    animation: pulse-dot 2s ease-in-out infinite;
-  }
+.hero-bottom {
+  display: flex; align-items: flex-end; justify-content: space-between; gap: 40px;
+  opacity: 0; animation: fadeUp 0.6s ease forwards 0.35s;
+}
+.hero-body { font-size: 18px; font-weight: 300; color: var(--text); max-width: 480px; line-height: 1.75; margin-bottom: 28px; }
+.hero-ctas { display: flex; gap: 12px; flex-wrap: wrap; }
 
-  @keyframes pulse-dot {
-    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(255,107,43,0.4); }
-    50%       { opacity: 0.8; box-shadow: 0 0 0 5px rgba(255,107,43,0); }
-  }
+.btn-primary { display: inline-flex; align-items: center; gap: 8px; background: var(--orange); color: var(--bg); font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 12px 24px; text-decoration: none; transition: all 0.2s; border: 1px solid var(--orange); }
+.btn-primary:hover { background: #ff5a2e; border-color: #ff5a2e; }
+.btn-secondary { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: var(--text); font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; padding: 12px 24px; text-decoration: none; transition: all 0.2s; border: 1px solid var(--rule); }
+.btn-secondary:hover { border-color: var(--muted); color: var(--text); }
 
-  /* ── HERO ── */
-  .hero {
-    flex: 1;
-    display: flex; flex-direction: column; justify-content: center;
-    padding: 0 48px 80px;
-    max-width: 1200px; margin: 0 auto; width: 100%;
-  }
+.hero-left { max-width: 560px; }
+.hero-stats { display: flex; gap: 40px; flex-shrink: 0; }
+.hero-stat { text-align: right; }
+.hero-stat-num { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 42px; line-height: 1; color: var(--text); }
+.hero-stat-num span { color: var(--orange); }
+.hero-stat-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-top: 4px; line-height: 1.4; }
 
-  .hero-eyebrow {
-    font-family: "DM Mono", monospace;
-    font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
-    color: var(--orange); margin-bottom: 32px;
-    display: flex; align-items: center; gap: 14px;
-    opacity: 0;
-    animation: fadeUp 0.7s ease 0.2s forwards;
-  }
+.hero-scroll {
+  position: absolute; bottom: 40px; right: 48px;
+  font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--muted);
+  writing-mode: vertical-rl; display: flex; align-items: center; gap: 10px;
+  opacity: 0; animation: fadeUp 0.6s ease forwards 0.5s; z-index: 2;
+}
+.hero-scroll::after { content: ''; width: 1px; height: 48px; background: var(--muted); }
 
-  .hero-eyebrow::before {
-    content: ""; width: 36px; height: 1px;
-    background: var(--orange); flex-shrink: 0;
-  }
+/* TICKER */
+.ticker { border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 14px 0; overflow: hidden; background: var(--surface); position: relative; }
+.ticker::before, .ticker::after { content: ''; position: absolute; top: 0; bottom: 0; width: 80px; z-index: 2; pointer-events: none; }
+.ticker::before { left: 0; background: linear-gradient(90deg, var(--surface), transparent); }
+.ticker::after { right: 0; background: linear-gradient(-90deg, var(--surface), transparent); }
+.ticker-track { display: flex; animation: ticker 28s linear infinite; width: max-content; }
+.ticker-item { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); padding: 0 32px; white-space: nowrap; display: flex; align-items: center; gap: 16px; }
+.ticker-item::after { content: '◆'; color: var(--orange); font-size: 6px; }
+@keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-  .hero-h1 {
-    font-family: "Syne", sans-serif;
-    font-size: clamp(64px, 10vw, 148px);
-    font-weight: 800;
-    line-height: 0.88;
-    letter-spacing: -0.04em;
-    color: var(--white);
-    opacity: 0;
-    animation: fadeUp 0.8s ease 0.35s forwards;
-  }
+/* PROBLEM */
+.problem { padding: 120px 48px; border-bottom: 1px solid var(--rule); }
+.problem-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1.8fr; gap: 100px; align-items: center; }
+.problem-label { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--orange); margin-bottom: 20px; }
+.problem-num { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: clamp(80px, 12vw, 160px); line-height: 0.9; color: rgba(255,255,255,0.04); letter-spacing: -0.03em; margin-top: 20px; }
+.problem-statement { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: clamp(28px, 3.5vw, 44px); line-height: 1.2; letter-spacing: -0.01em; color: var(--text); margin-bottom: 32px; }
+.problem-statement em { color: var(--orange); font-style: normal; }
+.problem-body { font-size: 17px; font-weight: 300; color: var(--text); line-height: 1.75; max-width: 560px; }
 
-  .hero-h1 .dim { color: rgba(255,255,255,0.12); }
-  .hero-h1 .acc { color: var(--orange); }
+/* SERVICES */
+.services { padding: 120px 48px; border-bottom: 1px solid var(--rule); }
+.services-inner { max-width: 1200px; margin: 0 auto; }
+.section-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 60px; border-bottom: 1px solid var(--rule); padding-bottom: 24px; }
+.section-label { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--orange); margin-bottom: 8px; }
+.section-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: clamp(36px, 5vw, 64px); line-height: 0.95; letter-spacing: -0.02em; text-transform: uppercase; color: var(--text); }
+.section-title .dim { color: rgba(240,236,228,0.2); }
+.section-count { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.1em; }
+.services-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--rule); border-left: 1px solid var(--rule); }
+.service-card { border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 40px 32px; position: relative; overflow: hidden; transition: background 0.3s; }
+.service-card:hover { background: var(--card); }
+.service-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 0; background: var(--orange); transition: height 0.4s ease; }
+.service-card:hover::before { height: 100%; }
+.service-num { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--muted); margin-bottom: 24px; }
+.service-card h3 { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 22px; letter-spacing: 0.02em; text-transform: uppercase; color: var(--text); margin-bottom: 14px; line-height: 1.1; }
+.service-card p { font-size: 14px; font-weight: 300; color: var(--text); line-height: 1.65; }
 
-  .hero-sub {
-    max-width: 520px;
-    margin-top: 44px;
-    font-size: 17px; font-weight: 300;
-    line-height: 1.8; color: rgba(255,255,255,0.48);
-    opacity: 0;
-    animation: fadeUp 0.7s ease 0.55s forwards;
-  }
+.examples-strip { border-top: 1px solid var(--rule); border-left: 1px solid var(--rule); border-right: 1px solid var(--rule); padding: 20px 32px; display: flex; align-items: center; justify-content: space-between; background: var(--surface); transition: background 0.2s; }
+.examples-strip:hover { background: var(--card); }
+.examples-strip p { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.examples-strip a { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--orange); text-decoration: none; display: flex; align-items: center; gap: 8px; transition: gap 0.2s; }
+.examples-strip:hover a { gap: 12px; }
 
-  /* ── EMAIL FORM ── */
-  .signup {
-    margin-top: 52px;
-    display: flex; gap: 0; align-items: stretch;
-    max-width: 460px;
-    opacity: 0;
-    animation: fadeUp 0.7s ease 0.7s forwards;
-  }
+/* PLEDGE */
+.pledge { padding: 120px 48px; border-bottom: 1px solid var(--rule); background: var(--surface); position: relative; overflow: hidden; }
+.pledge::before { content: 'COMMUNITY'; position: absolute; top: 50%; left: -40px; transform: translateY(-50%) rotate(-90deg); font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 140px; color: rgba(255,255,255,0.015); letter-spacing: -0.04em; pointer-events: none; user-select: none; }
+.pledge-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1.4fr; gap: 80px; align-items: start; }
+.pledge-left, .pledge-right { position: relative; z-index: 1; }
+.pledge-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: clamp(40px, 5.5vw, 72px); line-height: 0.92; letter-spacing: -0.02em; text-transform: uppercase; color: var(--text); margin-bottom: 24px; margin-top: 8px; }
+.pledge-title .orange { color: var(--orange); }
+.pledge-body { font-size: 16px; font-weight: 300; color: var(--text); line-height: 1.75; max-width: 380px; }
+.pledge-items { display: flex; flex-direction: column; gap: 2px; }
+.pledge-item { padding: 24px 28px; border: 1px solid var(--rule); background: var(--bg); transition: all 0.2s; }
+.pledge-item:hover { border-color: rgba(232,74,30,0.3); background: var(--card); }
+.pledge-item-head { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.pledge-arrow { color: var(--orange); font-size: 14px; font-family: 'DM Mono', monospace; flex-shrink: 0; }
+.pledge-item h4 { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text); }
+.pledge-item p { font-size: 13px; font-weight: 300; color: var(--text); line-height: 1.6; padding-left: 26px; }
+.pledge-mono { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--orange); letter-spacing: 0.06em; }
 
-  .signup input {
-    flex: 1;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--border);
-    border-right: none;
-    color: var(--white);
-    font-family: "DM Mono", monospace;
-    font-size: 12px; letter-spacing: 0.06em;
-    padding: 14px 20px;
-    outline: none;
-    border-radius: 4px 0 0 4px;
-    transition: border-color 0.2s, background 0.2s;
-  }
+/* HARDWARE */
+.hardware { padding: 120px 48px; border-bottom: 1px solid var(--rule); background: var(--surface); }
+.hardware-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr 1fr; gap: 80px; align-items: start; }
+.hw-stack { margin-top: 48px; display: flex; flex-direction: column; gap: 2px; }
+.hw-row { display: grid; grid-template-columns: 80px 1fr auto; align-items: center; gap: 20px; padding: 20px 24px; border: 1px solid var(--rule); background: var(--bg); transition: all 0.2s; cursor: default; }
+.hw-row:hover { border-color: var(--orange); background: var(--card); }
+.hw-chip { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; background: var(--orange); color: var(--bg); padding: 4px 8px; font-weight: 500; text-align: center; }
+.hw-chip.dark { background: rgba(255,255,255,0.06); color: var(--muted); }
+.hw-name { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 16px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text); }
+.hw-desc { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 0.06em; text-align: right; }
 
-  .signup input::placeholder { color: var(--muted); }
-  .signup input:focus { border-color: rgba(255,107,43,0.4); background: rgba(255,107,43,0.03); }
+/* MISSION */
+.mission { padding: 120px 48px; border-bottom: 1px solid var(--rule); position: relative; overflow: hidden; }
+.mission::before { content: 'MISSION'; position: absolute; top: 50%; right: -40px; transform: translateY(-50%) rotate(90deg); font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 160px; color: rgba(255,255,255,0.015); letter-spacing: -0.04em; pointer-events: none; user-select: none; }
+.mission-inner { max-width: 1200px; margin: 0 auto; }
+.mission-quote { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: clamp(32px, 4.5vw, 56px); line-height: 1.15; letter-spacing: -0.01em; color: var(--text); max-width: 900px; margin-bottom: 60px; border-left: 4px solid var(--orange); padding-left: 32px; }
+.mission-quote em { color: var(--orange); font-style: normal; }
+.mission-pillars { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin-top: 60px; }
+.pillar { background: var(--bg); padding: 32px 28px; transition: background 0.3s; }
+.pillar:hover { background: var(--card); }
+.pillar-num { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--orange); letter-spacing: 0.12em; margin-bottom: 16px; }
+.pillar h3 { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text); margin-bottom: 10px; }
+.pillar p { font-size: 13px; font-weight: 300; color: var(--text); line-height: 1.6; }
 
-  .signup button {
-    font-family: "DM Mono", monospace;
-    font-size: 11px; font-weight: 500;
-    letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--bg); background: var(--orange);
-    border: none; cursor: pointer;
-    padding: 14px 24px;
-    border-radius: 0 4px 4px 0;
-    transition: background 0.2s;
-    white-space: nowrap;
-  }
+/* AUDIENCE */
+.audience { padding: 120px 48px; border-bottom: 1px solid var(--rule); }
+.audience-inner { max-width: 1200px; margin: 0 auto; }
+.audience-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; background: var(--rule); border: 1px solid var(--rule); margin-top: 60px; }
+.audience-card { background: var(--bg); padding: 44px 40px; transition: background 0.3s; }
+.audience-card:hover { background: var(--card); }
+.audience-tag { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--orange); margin-bottom: 16px; }
+.audience-card h3 { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 24px; letter-spacing: 0.02em; text-transform: uppercase; color: var(--text); margin-bottom: 14px; }
+.audience-card p { font-size: 15px; font-weight: 300; color: #666; line-height: 1.65; }
 
-  .signup button:hover { background: var(--orange2); }
+/* ECOSYSTEM */
+.ecosystem { padding: 80px 48px; border-bottom: 1px solid var(--rule); background: var(--surface); }
+.ecosystem-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: 60px; }
+.eco-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); white-space: nowrap; flex-shrink: 0; }
+.eco-rule { width: 1px; height: 40px; background: var(--rule); flex-shrink: 0; }
+.eco-badges { display: flex; flex-wrap: wrap; gap: 8px; }
+.eco-badge { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; border: 1px solid var(--rule); color: var(--muted); padding: 8px 16px; transition: all 0.2s; }
+.eco-badge:hover { border-color: var(--orange); color: var(--orange); }
 
-  .signup-note {
-    margin-top: 12px;
-    font-family: "DM Mono", monospace;
-    font-size: 10px; letter-spacing: 0.1em;
-    color: var(--muted);
-    opacity: 0;
-    animation: fadeUp 0.6s ease 0.85s forwards;
-  }
+/* LTD BAND */
+.ltd-band { padding: 80px 48px; border-bottom: 1px solid var(--rule); }
+.ltd-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+.ltd-label { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--orange); margin-bottom: 16px; }
+.ltd-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: clamp(32px, 4vw, 52px); line-height: 0.95; text-transform: uppercase; color: var(--text); margin-bottom: 20px; letter-spacing: -0.01em; }
+.ltd-body { font-size: 16px; font-weight: 300; color: var(--text); line-height: 1.75; }
+.ltd-points { display: flex; flex-direction: column; gap: 2px; }
+.ltd-point { display: flex; align-items: flex-start; gap: 16px; padding: 20px 24px; border: 1px solid var(--rule); background: var(--bg); transition: all 0.2s; }
+.ltd-point:hover { border-color: rgba(232,74,30,0.3); background: var(--card); }
+.ltd-arrow { color: var(--orange); font-size: 14px; flex-shrink: 0; margin-top: 2px; }
+.ltd-point-text h4 { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 16px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text); margin-bottom: 4px; }
+.ltd-point-text p { font-size: 13px; font-weight: 300; color: #666; line-height: 1.5; }
 
-  /* ── TEASERS ── */
-  .teasers {
-    padding: 0 48px 80px;
-    max-width: 1200px; margin: 0 auto; width: 100%;
-    opacity: 0;
-    animation: fadeUp 0.8s ease 1s forwards;
-  }
+/* CTA */
+.cta { padding: 120px 48px; position: relative; overflow: hidden; }
+.cta::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 600px 400px at 20% 50%, rgba(232,74,30,0.06) 0%, transparent 70%), radial-gradient(ellipse 400px 400px at 80% 50%, rgba(232,74,30,0.03) 0%, transparent 70%); pointer-events: none; }
+.cta-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1.5fr 1fr; gap: 80px; align-items: center; position: relative; z-index: 1; }
+.cta-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: clamp(48px, 7vw, 88px); line-height: 0.92; letter-spacing: -0.02em; text-transform: uppercase; color: var(--text); margin-bottom: 32px; }
+.cta-title .orange { color: var(--orange); }
+.cta-body { font-size: 16px; font-weight: 300; color: var(--text); line-height: 1.7; max-width: 440px; }
+.cta-actions { display: flex; flex-direction: column; gap: 16px; }
+.cta-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 10px; background: var(--orange); color: var(--bg); font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 18px 36px; text-decoration: none; transition: all 0.2s; border: 1px solid var(--orange); }
+.cta-btn-primary:hover { background: #ff5a2e; border-color: #ff5a2e; }
+.cta-btn-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 10px; background: transparent; color: var(--text); font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; padding: 18px 36px; text-decoration: none; transition: all 0.2s; border: 1px solid var(--rule); }
+.cta-btn-secondary:hover { border-color: var(--muted); }
+.cta-contact { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.08em; text-align: center; }
+.cta-contact a { color: var(--orange); text-decoration: none; }
 
-  .teasers-label {
-    font-family: "DM Mono", monospace;
-    font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
-    color: var(--muted); margin-bottom: 24px;
-    display: flex; align-items: center; gap: 12px;
-  }
+/* FOOTER */
+footer { padding: 32px 48px; border-top: 1px solid var(--rule); display: flex; align-items: center; justify-content: space-between; background: var(--surface); }
+.footer-brand { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.footer-brand span { color: var(--orange); }
+.footer-note { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 0.08em; text-align: center; }
+.footer-links { display: flex; gap: 24px; }
+.footer-links a { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); text-decoration: none; letter-spacing: 0.08em; text-transform: uppercase; transition: color 0.2s; }
+.footer-links a:hover { color: var(--orange); }
 
-  .teasers-label::before { content: ""; flex: 1; height: 1px; background: var(--border); }
-  .teasers-label::after  { content: ""; flex: 1; height: 1px; background: var(--border); }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
 
-  .teaser-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1px;
-    background: var(--border);
-  }
-
-  .teaser {
-    background: var(--bg);
-    padding: 28px 24px;
-    position: relative; overflow: hidden;
-    transition: background 0.3s;
-    cursor: default;
-  }
-
-  .teaser::before {
-    content: "";
-    position: absolute; top: 0; left: 0; right: 0;
-    height: 2px;
-    background: var(--orange);
-    transform: scaleX(0); transform-origin: left;
-    transition: transform 0.4s ease;
-  }
-
-  .teaser:hover { background: var(--bg2); }
-  .teaser:hover::before { transform: scaleX(1); }
-
-  .teaser-icon {
-    width: 36px; height: 36px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    margin-bottom: 16px;
-    transition: border-color 0.3s;
-  }
-
-  .teaser:hover .teaser-icon { border-color: rgba(255,107,43,0.3); }
-
-  .teaser-icon svg { width: 16px; height: 16px; }
-
-  .teaser-tag {
-    font-family: "DM Mono", monospace;
-    font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase;
-    color: var(--orange); margin-bottom: 8px; opacity: 0.7;
-  }
-
-  .teaser-title {
-    font-size: 14px; font-weight: 500;
-    color: var(--white); line-height: 1.4; margin-bottom: 8px;
-  }
-
-  .teaser-desc {
-    font-size: 12.5px; font-weight: 300;
-    color: rgba(255,255,255,0.36); line-height: 1.7;
-  }
-
-  .teaser-lock {
-    position: absolute; top: 20px; right: 20px;
-    font-family: "DM Mono", monospace;
-    font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
-    color: rgba(255,255,255,0.15);
-    display: flex; align-items: center; gap: 5px;
-  }
-
-  .teaser-lock::before {
-    content: ""; width: 6px; height: 7px;
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 1px;
-    display: block;
-  }
-
-  /* ── FOOTER ── */
-  footer {
-    border-top: 1px solid var(--border);
-    padding: 24px 48px;
-    display: flex; justify-content: space-between; align-items: center;
-    opacity: 0;
-    animation: fadeUp 0.6s ease 1.1s forwards;
-  }
-
-  .footer-left {
-    font-family: "DM Mono", monospace;
-    font-size: 10px; letter-spacing: 0.12em;
-    color: rgba(255,255,255,0.2);
-  }
-
-  .footer-right {
-    display: flex; gap: 24px;
-  }
-
-  .footer-link {
-    font-family: "DM Mono", monospace;
-    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--muted); text-decoration: none;
-    transition: color 0.2s;
-  }
-
-  .footer-link:hover { color: var(--white); }
-
-  /* ── COUNTER ── */
-  .counter-wrap {
-    display: flex; gap: 32px; margin-top: 52px;
-    opacity: 0;
-    animation: fadeUp 0.7s ease 0.9s forwards;
-  }
-
-  .counter-item { display: flex; flex-direction: column; gap: 4px; }
-
-  .counter-num {
-    font-family: "Syne", sans-serif;
-    font-size: 36px; font-weight: 800;
-    letter-spacing: -0.04em; color: var(--white);
-    line-height: 1;
-  }
-
-  .counter-num .acc { color: var(--orange); }
-
-  .counter-label {
-    font-family: "DM Mono", monospace;
-    font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
-    color: var(--muted);
-  }
-
-  .counter-sep {
-    width: 1px; background: var(--border);
-    align-self: stretch; margin: 4px 0;
-  }
-
-  /* ── FADE UP ── */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(18px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  /* ── RESPONSIVE ── */
-  @media (max-width: 900px) {
-    nav { padding: 24px; }
-    .hero { padding: 0 24px 60px; }
-    .teasers { padding: 0 24px 60px; }
-    footer { padding: 20px 24px; flex-direction: column; gap: 16px; text-align: center; }
-    .teaser-grid { grid-template-columns: repeat(2, 1fr); }
-    .hero-h1 { font-size: clamp(52px, 14vw, 100px); }
-    .counter-wrap { gap: 20px; }
-    .signup { max-width: 100%; }
-  }
-
-  @media (max-width: 500px) {
-    .teaser-grid { grid-template-columns: 1fr; }
-  }
+@media (max-width: 1024px) {
+  nav { padding: 0 24px; }
+  .hero { padding: 56px 24px 60px; }
+  .hero-bottom { flex-direction: column; align-items: flex-start; }
+  .hero-stats { flex-direction: row; }
+  .problem { padding: 80px 24px; }
+  .problem-inner { grid-template-columns: 1fr; gap: 40px; }
+  .services { padding: 80px 24px; }
+  .services-grid { grid-template-columns: 1fr 1fr; }
+  .pledge { padding: 80px 24px; }
+  .pledge-inner { grid-template-columns: 1fr; gap: 48px; }
+  .hardware { padding: 80px 24px; }
+  .hardware-inner { grid-template-columns: 1fr; gap: 48px; }
+  .mission { padding: 80px 24px; }
+  .mission-pillars { grid-template-columns: 1fr 1fr; }
+  .audience { padding: 80px 24px; }
+  .audience-grid { grid-template-columns: 1fr; }
+  .ecosystem { padding: 60px 24px; }
+  .ecosystem-inner { flex-wrap: wrap; gap: 24px; }
+  .eco-rule { display: none; }
+  .ltd-band { padding: 80px 24px; }
+  .ltd-inner { grid-template-columns: 1fr; gap: 40px; }
+  .cta { padding: 80px 24px; }
+  .cta-inner { grid-template-columns: 1fr; gap: 48px; }
+  footer { padding: 24px; flex-direction: column; gap: 16px; text-align: center; }
+  .nav-links { display: none; }
+  .cursor, .cursor-ring { display: none; }
+  body { cursor: auto; }
+}
 </style>
 </head>
 <body>
 
-<div class="grid-bg"></div>
-<div class="glow-tl"></div>
-<div class="glow-br"></div>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
 
-<div class="page">
+<nav>
+  <a href="index.html" class="nav-brand">
+    <span class="nav-logo">Resolutis <span>Edge AI Lab</span></span>
+    <div class="nav-sep"></div>
+    <span class="nav-sub">resolutis.com/edgeailab</span>
+  </a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="#services">What We Do</a></li>
+      <li><a href="#mission">Mission</a></li>
+      <li><a href="#audience">Who We Serve</a></li>
+      <li><a href="examples.html">Examples</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a href="mailto:john@resolutis.com" class="nav-cta">Get In Touch</a>
+  </div>
+</nav>
 
-  <!-- NAV -->
-  <nav>
-    <a href="https://resolutis.com" class="nav-logo">
-      <img src="data:image/png;base64,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" alt="Resolutis">
-      <div class="nav-divider"></div>
-      <span class="nav-lab">IoT Lab</span>
-    </a>
-    <div class="nav-status">
-      <div class="status-dot"></div>
-      Launching 2026
-    </div>
-  </nav>
-
-  <!-- HERO -->
-  <div class="hero">
-
-    <div class="hero-eyebrow">Manchester Edge AI Lab &mdash; Resolutis</div>
-
-    <h1 class="hero-h1">
-      SOMETHING<br>
-      IS BEING<br>
-      <span class="acc">BUILT.</span>
+<section class="hero">
+  <div class="hero-bg-text">EDGE AI</div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Resolutis Edge AI Lab</div>
+    <h1 class="hero-title">
+     Building the<br>
+      <span class="line-orange">north's</span><br>
+      Edge<br>
+      <span class="line-orange">community</span>
     </h1>
-
-    <p class="hero-sub">
-      A practitioner-led Edge AI and IoT lab for hardware startups and engineering teams in the North of England. Access to production silicon, embedded engineering depth, and a community of people who actually ship hardware.
-    </p>
-
-    <div class="counter-wrap">
-      <div class="counter-item">
-        <div class="counter-num">25<span class="acc">+</span></div>
-        <div class="counter-label">Years embedded depth</div>
-      </div>
-      <div class="counter-sep"></div>
-      <div class="counter-item">
-        <div class="counter-num"><span class="acc">MCR</span></div>
-        <div class="counter-label">Manchester based</div>
-      </div>
-      <div class="counter-sep"></div>
-      <div class="counter-item">
-        <div class="counter-num">Edge<span class="acc">.</span></div>
-        <div class="counter-label">to Enterprise</div>
-      </div>
-    </div>
-
-    <div class="signup">
-      <input type="email" placeholder="your@email.com" id="email-input">
-      <button onclick="handleSignup()">Notify me</button>
-    </div>
-    <div class="signup-note">We will let you know when the lab opens. No spam.</div>
-
-  </div>
-
-  <!-- TEASERS -->
-  <div class="teasers">
-    <div class="teasers-label">What&#8217;s coming</div>
-    <div class="teaser-grid">
-
-      <div class="teaser">
-        <div class="teaser-lock">Soon</div>
-        <div class="teaser-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,107,43,0.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="17" r="1"/>
-          </svg>
+    <div class="hero-bottom">
+      <div class="hero-left">
+        <p class="hero-body">Embedded systems and Edge AI for Northern businesses. Real engineering depth. From BSP to production inference. Edge to Enterprise, underpinned by Cloud.</p>
+        <div class="hero-ctas">
+          <a href="mailto:john@resolutis.com" class="btn-primary">Get In Touch →</a>
+          <a href="examples.html" class="btn-secondary">See Examples</a>
         </div>
-        <div class="teaser-tag">Hardware</div>
-        <div class="teaser-title">Production Silicon Access</div>
-        <div class="teaser-desc">Hands-on access to edge AI and IoT hardware before you commit to procurement. No dev kit theatre.</div>
       </div>
-
-      <div class="teaser">
-        <div class="teaser-lock">Soon</div>
-        <div class="teaser-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,107,43,0.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
-          </svg>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-num">25<span>+</span></div>
+          <div class="hero-stat-label">Years embedded<br>experience</div>
         </div>
-        <div class="teaser-tag">Edge AI</div>
-        <div class="teaser-title">Inference Bring-Up</div>
-        <div class="teaser-desc">Get your trained model running on real hardware at the latency and power budget your product actually requires.</div>
-      </div>
-
-      <div class="teaser">
-        <div class="teaser-lock">Soon</div>
-        <div class="teaser-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,107,43,0.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/>
-          </svg>
+        <div class="hero-stat">
+          <div class="hero-stat-num">Big<span>Tech</span></div>
+          <div class="hero-stat-label">NXP · Khronos<br>Microchip · Intel</div>
         </div>
-        <div class="teaser-tag">IoT</div>
-        <div class="teaser-title">Connectivity to Cloud</div>
-        <div class="teaser-desc">LTE-M, NB-IoT, LoRaWAN. From cellular tracker to ERP dashboard. The full data spine, end to end.</div>
       </div>
-
-      <div class="teaser">
-        <div class="teaser-lock">Soon</div>
-        <div class="teaser-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,107,43,0.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-          </svg>
-        </div>
-        <div class="teaser-tag">Community</div>
-        <div class="teaser-title">Northern England Network</div>
-        <div class="teaser-desc">Monthly meetups for embedded engineers, hardware founders, and IoT teams across the Manchester, Leeds and Sheffield triangle.</div>
-      </div>
-
     </div>
   </div>
+  <div class="hero-scroll">Scroll</div>
+</section>
 
-  <!-- FOOTER -->
-  <footer>
-    <div class="footer-left">&#169; 2026 Resolutis Ltd &middot; Manchester &middot; Registered in England &amp; Wales</div>
-    <div class="footer-right">
-      <a href="https://resolutis.com" class="footer-link">Resolutis.com</a>
-      <a href="mailto:john@resolutis.com" class="footer-link">Get in touch</a>
-    </div>
-  </footer>
-
+<div class="ticker">
+  <div class="ticker-track">
+    <span class="ticker-item">NVIDIA Jetson Orin</span><span class="ticker-item">NXP i.MX 9x</span><span class="ticker-item">TensorRT</span><span class="ticker-item">Edge AI Inference</span><span class="ticker-item">System Integration</span><span class="ticker-item">NTAG 424 DNA</span><span class="ticker-item">Rust Systems</span><span class="ticker-item">AWS Cloud</span><span class="ticker-item">eIQ / Neutron NPU</span><span class="ticker-item">LTE-M / NB-IoT</span><span class="ticker-item">EdgeOps Observability</span><span class="ticker-item">Made Smarter NW</span><span class="ticker-item">NVIDIA Jetson Orin</span><span class="ticker-item">NXP i.MX 9x</span><span class="ticker-item">TensorRT</span><span class="ticker-item">Edge AI Inference</span><span class="ticker-item">System Integration</span><span class="ticker-item">NTAG 424 DNA</span><span class="ticker-item">Rust Systems</span><span class="ticker-item">AWS Cloud</span><span class="ticker-item">eIQ / Neutron NPU</span><span class="ticker-item">LTE-M / NB-IoT</span><span class="ticker-item">EdgeOps Observability</span><span class="ticker-item">Made Smarter NW</span>
+  </div>
 </div>
 
+<section class="problem" id="problem">
+  <div class="problem-inner">
+    <div>
+      <div class="problem-label">The Problem</div>
+      <div class="problem-num">01</div>
+    </div>
+    <div class="reveal">
+      <p class="problem-statement">Businesses have the vision for <em>intelligent hardware.</em> They can't find anyone who can actually build it.</p>
+      <p class="problem-body">AI engineers have never touched real hardware. Embedded engineers have never deployed a model. The people who can bridge both — from system integration to production inference — are genuinely scarce. Most are locked inside large organisations. The businesses that need them most can't reach them.<br><br>That's the gap Resolutis Edge AI Lab exists to close.</p>
+    </div>
+  </div>
+</section>
+
+<section class="mission" id="mission">
+  <div class="mission-inner">
+    <div class="section-label">Mission</div>
+    <p class="mission-quote reveal">To build world-class embedded systems and edge AI capability in the North — developing local talent, serving Northern businesses, and <em>positioning the region at the forefront of intelligent hardware.</em></p>
+    <div class="mission-pillars reveal">
+      <div class="pillar"><div class="pillar-num">01</div><h3>Accessibility</h3><p>Expert embedded and edge AI capability without London price tags.</p></div>
+      <div class="pillar"><div class="pillar-num">02</div><h3>Talent</h3><p>Keeping Northern engineers in the North. Building on university output from MMU, UoM, and Salford.</p></div>
+      <div class="pillar"><div class="pillar-num">03</div><h3>Community</h3><p>An independent company with a community mission — reinvesting in the Northern tech ecosystem.</p></div>
+      <div class="pillar"><div class="pillar-num">04</div><h3>Scale</h3><p>Northern England first. Expanding nationwide as the network grows.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="pledge">
+  <div class="pledge-inner">
+    <div class="pledge-left reveal">
+      <div class="section-label">Community Pledge</div>
+      <h2 class="pledge-title">Built<br><span class="orange">around</span><br>community.</h2>
+      <p class="pledge-body">We are a private limited company with a community mission. We don't need a legal structure to hold us to this — we hold ourselves to it.</p>
+    </div>
+    <div class="pledge-right reveal">
+      <div class="pledge-items">
+        <div class="pledge-item"><div class="pledge-item-head"><span class="pledge-arrow">→</span><h4>Free Lab Days</h4></div><p>Every month, a set number of days are available at no cost to early-stage Northern hardware founders who need access to production silicon and embedded expertise.</p></div>
+        <div class="pledge-item"><div class="pledge-item-head"><span class="pledge-arrow">→</span><h4>Open Source Everything</h4></div><p>Every demo, tool, and case study built in the lab is published on GitHub under <span class="pledge-mono">resolutis-edge-ai-lab</span> — free for anyone to use, learn from, and build on.</p></div>
+        <div class="pledge-item"><div class="pledge-item-head"><span class="pledge-arrow">→</span><h4>Monthly Open Sessions</h4></div><p>A regular meetup for Northern embedded engineers, hardware founders, and IoT teams. No sales pitch. Just knowledge sharing.</p></div>
+        <div class="pledge-item"><div class="pledge-item-head"><span class="pledge-arrow">→</span><h4>University Partnerships</h4></div><p>Structured placements from MMU, UoM, and Salford giving Northern students real embedded and edge AI experience they can't get anywhere else in the region.</p></div>
+        <div class="pledge-item"><div class="pledge-item-head"><span class="pledge-arrow">→</span><h4>Knowledge in Public</h4></div><p>We publish what we learn — blog posts, LinkedIn, GitHub. The more we give away, the stronger the community becomes.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="services" id="services">
+  <div class="services-inner">
+    <div class="section-head">
+      <div>
+        <div class="section-label">What We Do</div>
+        <h2 class="section-title">From silicon selection<br><span class="dim">to production.</span></h2>
+      </div>
+      <div class="section-count">07 capabilities</div>
+    </div>
+    <div class="services-grid">
+      <div class="service-card reveal"><div class="service-num">01</div><h3>Edge AI Deployment</h3><p>TensorRT, eIQ, ONNX Runtime. Get your trained model running on real hardware at the latency and power budget your product actually requires.</p></div>
+      <div class="service-card reveal"><div class="service-num">02</div><h3>AI Observability</h3><p>EdgeOps — real-time inference health monitoring for Jetson and i.MX deployments. Know what your edge AI is doing in production.</p></div>
+      <div class="service-card reveal"><div class="service-num">03</div><h3>Hardware Prototyping</h3><p>Bring-up on NXP i.MX 9x, NVIDIA Jetson and Microcontrollers (Arduino · ESP32). BSP configuration, Yocto layer integration, sensor integration. No dev kit theatre.</p></div>
+      <div class="service-card reveal"><div class="service-num">04</div><h3>NFC Authentication</h3><p>NTAG 424 DNA cryptographic verification. Secure product identity for supply chain, luxury goods, and access control.</p></div>
+      <div class="service-card reveal"><div class="service-num">05</div><h3>Edge-to-ERP Pipelines</h3><p>Edge or on-prem devices to ERP dashboard. Rust-based data pipelines from device to cloud via Conduo.</p></div>
+      <div class="service-card reveal"><div class="service-num">06</div><h3>Edge to Cloud</h3><p>LTE-M, NB-IoT, LoRaWAN. From cellular tracker into AWS, GCP and Azure Cloud.</p></div>
+      <div class="service-card reveal"><div class="service-num">07</div><h3>Training & Lab Access</h3><p>Workshops, lab days, and open sessions. Production silicon access for Northern hardware startups and university spin-outs.</p></div>
+    </div>
+    <div class="examples-strip">
+      <p>See what gets built — real-world examples across manufacturing, supply chain, healthcare, retail and more</p>
+      <a href="examples.html">View All Examples →</a>
+    </div>
+  </div>
+</section>
+
+<section class="hardware" id="hardware">
+  <div class="hardware-inner">
+    <div>
+      <div class="section-label">Lab Hardware</div>
+      <h2 class="section-title" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(36px,5vw,64px);line-height:0.95;letter-spacing:-0.02em;text-transform:uppercase;color:var(--text);">Production-grade silicon.<br><span style="color:rgba(240,236,228,0.2)">Not eval boards.</span></h2>
+      <div class="hw-stack reveal">
+        <div class="hw-row"><span class="hw-chip">NVIDIA</span><div><div class="hw-name">Jetson Orin</div><div style="font-size:13px;color:#555;font-weight:300;margin-top:2px;">Edge AI inference — TensorRT · DeepStream · YOLOv8</div></div><div class="hw-desc">Edge AI</div></div>
+        <div class="hw-row"><span class="hw-chip">NXP</span><div><div class="hw-name">i.MX 9x Series</div><div style="font-size:13px;color:#555;font-weight:300;margin-top:2px;">Production IoT silicon — eIQ · Neutron NPU · i.MX 93W</div></div><div class="hw-desc">IoT Silicon</div></div>
+        <div class="hw-row"><span class="hw-chip">NXP</span><div><div class="hw-name">PN532 / NTAG 424 DNA</div><div style="font-size:13px;color:#555;font-weight:300;margin-top:2px;">NFC authentication · NIST key diversification</div></div><div class="hw-desc">NFC Auth</div></div>
+        <div class="hw-row"><span class="hw-chip dark">RPi</span><div><div class="hw-name">Raspberry Pi</div><div style="font-size:13px;color:#555;font-weight:300;margin-top:2px;">Rapid prototyping and proof-of-concept nodes</div></div><div class="hw-desc">Prototyping</div></div>
+      </div>
+    </div>
+    <div class="reveal">
+      <div class="section-label">Deep Specialism</div>
+      <h2 class="section-title" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(32px,4vw,52px);line-height:0.95;letter-spacing:-0.02em;text-transform:uppercase;color:var(--text);margin-bottom:24px;">BSP<br>to inference.</h2>
+      <p style="font-size:16px;font-weight:300;color:var(--text);line-height:1.75;margin-bottom:40px;">Deploying and operating AI on constrained hardware at the edge. We work from the BSP upward — system integration, middleware, and production inference — in Rust, on real silicon.</p>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div style="display:flex;align-items:center;gap:12px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);"><span style="color:var(--orange)">→</span> Yocto / Buildroot system integration</div>
+        <div style="display:flex;align-items:center;gap:12px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);"><span style="color:var(--orange)">→</span> Edge AI inference optimisation</div>
+        <div style="display:flex;align-items:center;gap:12px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);"><span style="color:var(--orange)">→</span> Rust systems programming</div>
+        <div style="display:flex;align-items:center;gap:12px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);"><span style="color:var(--orange)">→</span> NFC cryptographic authentication</div>
+        <div style="display:flex;align-items:center;gap:12px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);"><span style="color:var(--orange)">→</span> Edge-to-cloud pipeline architecture</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="audience" id="audience">
+  <div class="audience-inner">
+    <div class="section-head">
+      <div>
+        <div class="section-label">Who We Serve</div>
+        <h2 class="section-title">Built for<br><span class="dim">Northern builders.</span></h2>
+      </div>
+      <div class="section-count">04 audiences</div>
+    </div>
+    <div class="audience-grid">
+      <div class="audience-card reveal"><div class="audience-tag">Hardware Startups</div><h3>Founders with a vision</h3><p>You have the idea. You need embedded expertise without a full-time hire. Lab access, prototyping support, and fractional CTO capability to get from concept to validated hardware.</p></div>
+      <div class="audience-card reveal"><div class="audience-tag">Scale-ups</div><h3>Adding edge intelligence</h3><p>Your product works. Now you need to add AI, connectivity, or authentication. We integrate edge capability into existing products without rebuilding from scratch.</p></div>
+      <div class="audience-card reveal"><div class="audience-tag">Manufacturers</div><h3>Northern industry</h3><p>Predictive maintenance, quality inspection, energy monitoring. Made Smarter-aligned engagements delivering real operational improvement on real factory floors.</p></div>
+      <div class="audience-card reveal"><div class="audience-tag">Universities</div><h3>Spin-outs & research</h3><p>The bridge from academic prototype to commercial product. Production hardware, real-world deployment experience, and a network of Northern tech contacts.</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="ecosystem">
+  <div class="ecosystem-inner">
+    <div class="eco-label">Partners & Affiliations</div>
+    <div class="eco-rule"></div>
+    <div class="eco-badges">
+      <span class="eco-badge">NXP Partner</span>
+      <span class="eco-badge">NVIDIA Connect</span>
+      <span class="eco-badge">Linux Foundation</span>
+      <span class="eco-badge">Manchester Digital</span>
+      <span class="eco-badge">Made Smarter NW</span>
+      <span class="eco-badge">Innovate UK</span>
+    </div>
+  </div>
+</div>
+
+<section class="ltd-band">
+  <div class="ltd-inner">
+    <div class="reveal">
+      <div class="ltd-label">Private Limited Company</div>
+      <h2 class="ltd-title">Built to serve<br>the North.</h2>
+      <p class="ltd-body">Resolutis Edge AI Lab is an independent company with a community mission — operated in partnership with Resolutis Ltd. Every engagement feeds capability back into the Northern tech ecosystem while building a commercially sustainable business.</p>
+    </div>
+    <div class="ltd-points reveal">
+      <div class="ltd-point"><span class="ltd-arrow">→</span><div class="ltd-point-text"><h4>Grant-eligible</h4><p>Aligned with Made Smarter, Innovate UK, and GMCA funding programmes</p></div></div>
+      <div class="ltd-point"><span class="ltd-arrow">→</span><div class="ltd-point-text"><h4>Talent pipeline</h4><p>University partnerships with MMU, UoM, and Salford keeping Northern engineers in the North</p></div></div>
+      <div class="ltd-point"><span class="ltd-arrow">→</span><div class="ltd-point-text"><h4>Operated by experts</h4><p>25+ years of embedded systems experience at Apple, Google, JLR, and Intel</p></div></div>
+      <div class="ltd-point"><span class="ltd-arrow">→</span><div class="ltd-point-text"><h4>Regional expansion</h4><p>Northern England anchor expanding nationwide</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="cta" id="contact">
+  <div class="cta-inner">
+    <div>
+      <h2 class="cta-title">Ready to ship<br><span class="orange">intelligent</span><br>hardware?</h2>
+      <p class="cta-body">Talk to us about lab access, a scoped engagement, or a technical partnership. We work with Northern startups, manufacturers, and scale-ups who need to turn edge AI vision into working product.</p>
+    </div>
+    <div class="cta-actions">
+      <a href="mailto:john@resolutis.com" class="cta-btn-primary">Get In Touch →</a>
+      <a href="examples.html" class="cta-btn-secondary">See Examples</a>
+      <div class="cta-contact"><a href="mailto:john@resolutis.com">john@resolutis.com</a></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-brand">Resolutis <span>Edge AI Lab</span> Ltd</div>
+  <div class="footer-note">Operated in partnership with Resolutis Ltd · Northern England · resolutis.com/edgeailab</div>
+  <div class="footer-links">
+    <a href="examples.html">Examples</a>
+    <a href="https://resolutis.com">Resolutis</a>
+    <a href="mailto:john@resolutis.com">Contact</a>
+  </div>
+</footer>
+
 <script>
-  function handleSignup() {
-    const input = document.getElementById("email-input");
-    const val = input.value.trim();
-    const btn = document.querySelector(".signup button");
-
-    if (!val || !val.includes("@")) {
-      input.style.borderColor = "rgba(255,80,80,0.5)";
-      setTimeout(() => input.style.borderColor = "", 1200);
-      return;
-    }
-
-    // In production, POST to your mailing list endpoint here
-    btn.textContent = "Done ✓";
-    btn.style.background = "#22c55e";
-    input.disabled = true;
-    btn.disabled = true;
-    input.value = "";
-    input.placeholder = "Thanks — we’ll be in touch.";
-  }
-
-  document.getElementById("email-input").addEventListener("keydown", function(e) {
-    if (e.key === "Enter") handleSignup();
-  });
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX - 4 + 'px';
+  cursor.style.top = e.clientY - 4 + 'px';
+  ring.style.left = e.clientX - 16 + 'px';
+  ring.style.top = e.clientY - 16 + 'px';
+});
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+reveals.forEach(el => observer.observe(el));
 </script>
-
 </body>
 </html>
